@@ -4,18 +4,21 @@
         <h1 class="text-5xl text-center">Your Personalize Movie Playlist Awaits!</h1>
         <p class="text-xl text-center font-extralight w-1/2 place-self-center">MovieStack is your go-to destination for managing and curating your personal movie watchlist.</p>
         <div class="inline-block self-center w-3/6 content-center">
-            <label class="form-control w-full flex flex-row">
-                <div class="label">
-                    <span class="label-text"></span>
-                    <span class="label-text-alt"></span>
-                </div>
-                <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered w-full" />
-                <div class="label">
-                    <span class="label-text-alt"></span>
-                    <span class="label-text-alt"></span>
-                </div>
-                <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]">Glass button</button>
-            </label>
+            <form action="/" method="post">
+            @csrf
+                <label class="form-control w-full flex flex-row">
+                    <div class="label">
+                        <span class="label-text"></span>
+                        <span class="label-text-alt"></span>
+                    </div>
+                    <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered w-full text-black" name="movie_name"/>
+                    <div class="label">
+                        <span class="label-text-alt"></span>
+                        <span class="label-text-alt"></span>
+                    </div>
+                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]" type="submit">Glass button</button>
+                </label>
+            </form>
         </div>
     </div>
     <div class="w-full justify-center flex">
