@@ -7,7 +7,7 @@
             <div class="w-3/4 place-self-center">
                 <h1 class="text-4xl text-center">Create your personalized movie watchlist to track and organize films you want to see, ensuring you never miss out on your favorites!</h1>
             </div>
-                @foreach ($movies as $film)
+                @foreach ($films as $film)
                     <div class="card card-compact w-1/2 bg-base-100 shadow-xl self-center reveal">
                         <figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure>
                         <div class="card-body">
@@ -16,7 +16,12 @@
                             <div class="card-actions justify-end gap-8">
                                 <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]">View</button>
                                 <button class="btn btn-warning">Edit</button>
-                                <button class="btn btn-error">Delete</button>
+                                <form action="/delete/{{ $film->id }}" method="post">
+                                @csrf
+                                @method('delete')
+                                    <button class="btn btn-error" type="submit">Delete</button>
+                                </form>
+                                
                             </div>
                         </div>
                     </div> 

@@ -11,7 +11,7 @@ class MovieController extends Controller
     public function index()
     {
         $movies = Movie::all();
-        return view('home', ['movies' => $movies]);
+        return view('home', ['films' => $movies]);
     }
 
     public function create(Request $request)
@@ -46,5 +46,11 @@ class MovieController extends Controller
             return redirect('/')->withErrors(['Film tidak ditemukan']);
         }
     
+    }
+
+    public function deleteMovie(Request $request) {
+        Movie::where('id', $request->id)-> delete();    
+        
+        return redirect('/');
     }
 }
