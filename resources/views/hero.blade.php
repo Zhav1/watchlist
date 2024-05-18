@@ -21,9 +21,9 @@
                         <span class="label-text-alt"></span>
                     </div>
                     @auth
-                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]" type="submit">Glass button</button>
+                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]" type="submit">Submit</button>
                     @else
-                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]"><a href="/login">Glass button</a></button>
+                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]"><a href="/login">Submit</a></button>
                     @endauth
                 </label>
             </form>

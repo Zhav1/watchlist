@@ -31,5 +31,4 @@
                 @endforeach
         </div>
     </section>
-
 @endsection
