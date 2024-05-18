@@ -11,12 +11,20 @@
                         <span class="label-text"></span>
                         <span class="label-text-alt"></span>
                     </div>
-                    <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered w-full text-black" name="movie_name"/>
+                    @if ($errors->any())
+                        <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered input-error w-full border-4 text-black" name="movie_name"/>
+                    @else
+                        <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered w-full text-black" name="movie_name"/>
+                    @endif
                     <div class="label">
                         <span class="label-text-alt"></span>
                         <span class="label-text-alt"></span>
                     </div>
+                    @auth
                     <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]" type="submit">Glass button</button>
+                    @else
+                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]"><a href="/login">Glass button</a></button>
+                    @endauth
                 </label>
             </form>
         </div>

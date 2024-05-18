@@ -19,7 +19,7 @@ class MovieController extends Controller
         $request->validate([
             'movie_name' => 'required|string|max:255',
         ]);
-
+        
         $movieName = $request->input('movie_name');
         $apiKey = env('OMDB_API_KEY');
         $response = Http::get("http://www.omdbapi.com/?t={$movieName}&apikey={$apiKey}");
@@ -41,16 +41,16 @@ class MovieController extends Controller
             ]);
 
             return redirect('/');
-        } 
+        }
         else {
             return redirect('/')->withErrors(['Film tidak ditemukan']);
         }
-    
+
     }
 
     public function deleteMovie(Request $request) {
-        Movie::where('id', $request->id)-> delete();    
-        
+        Movie::where('id', $request->id)-> delete();
+
         return redirect('/');
     }
 }

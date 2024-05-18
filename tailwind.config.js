@@ -11,9 +11,12 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [require('daisyui')],
+  plugins:
+  [
+    require('daisyui')
+  ],
 
-//apabila warna background tampilan web menjadi hitam, tambahkan kode berikut 
+//apabila warna background tampilan web menjadi hitam, tambahkan kode berikut
 daisyui: {
   themes: ["light"]
 }

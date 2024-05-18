@@ -16,15 +16,18 @@
                             <div class="card-actions justify-end gap-8">
                                 <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]">View</button>
                                 <button class="btn btn-warning">Edit</button>
-                                <form action="/delete/{{ $film->id }}" method="post">
-                                @csrf
-                                @method('delete')
-                                    <button class="btn btn-error" type="submit">Delete</button>
-                                </form>
-                                
+                                @auth
+                                    <form action="/delete/{{ $film->id }}" method="post">
+                                    @csrf
+                                    @method('delete')
+                                        <button class="btn btn-error" type="submit">Delete</button>
+                                    </form>
+                                    @else
+                                    <button class="btn btn-error">Delete</button>
+                                @endauth
                             </div>
                         </div>
-                    </div> 
+                    </div>
                 @endforeach
         </div>
     </section>

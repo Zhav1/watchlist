@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('movies', function (Blueprint $table) {
             $table->id();
-            $table->int('user_id');
-            $table->FOREIGN('user_id')->REFERENCE('id')->ON('users')->ondelete('RESTRICTS');
+            // $table->unsignedBigInteger('user_id');
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('restrict');
             $table->string('title');
             $table->text('plot');
             $table->string('poster');
