@@ -12,4 +12,9 @@ class Movie extends Model
     public $timestamps = false;
 
     protected $guarded = ['id'];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

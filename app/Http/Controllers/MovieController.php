@@ -53,4 +53,15 @@ class MovieController extends Controller
 
         return redirect('/');
     }
+    
+    public function show($id)
+    {
+        $film = Movie::find($id);
+
+        if (!$film) {
+            return redirect('/')->with('error', 'Movie not found');
+        }
+
+        return view('show', compact('film'));
+    }
 }

@@ -14,7 +14,11 @@
                             <h2 class="card-title">{{ $film->title }}</h2>
                             <p class="text-sm">{{ $film->plot }}</p>
                             <div class="card-actions justify-end gap-8">
-                                <button class="btn bg-[#CFF245] hover:bg-[#AAC73C]">View</button>
+                                <a href="{{ route('movies.show', ['id' => $film->id]) }}">
+                                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded">
+                                        View
+                                    </button>
+                                </a>
                                 <button class="btn btn-warning">Edit</button>
                                 @auth
                                     <form action="/delete/{{ $film->id }}" method="post">
