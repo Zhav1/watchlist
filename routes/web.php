@@ -5,6 +5,7 @@ use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', [MovieController::class, 'index']);
 Route::post('/', [MovieController::class, 'create']);
@@ -20,6 +21,8 @@ Route::get('/{id}', [MovieController::class, 'show'])->name('movies.show');
 
 Route::post('/addComment', [CommentController::class, 'addComment'])->name('addComment');
 Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment']);
+
+Route::get('/user', [UserController::class, 'index'])->name('user');
 
 
 
@@ -52,4 +55,3 @@ Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment']
 // // });
 
 // require __DIR__.'/auth.php';
-
