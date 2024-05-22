@@ -34,7 +34,11 @@
                     <div class="flex relative">
                         <input name="comment" type="text" placeholder="Add Comment"
                                class="input input-bordered w-full pr-16" autocomplete="off" />
+                        @auth
                         <button type="submit" class="btn btn-success absolute right-0 top-0 h-full">Send</button>
+                        @else
+                        <button class="btn btn-success absolute right-0 top-0 h-full"><a href="/login">Send</a></button>
+                        @endauth
                     </div>
                     @error('comment')
                     <span class="text-red-600">{{ $message }}</span>
@@ -53,11 +57,13 @@
                         </div>
                         <div class="flex justify-between items-center mt-4 w-full">
                             <p class="text-gray-500 text-sm">{{ $comment->tanggal }}</p>
+                            @auth
                             <form action="/deleteComment/{{ $comment->comment_id }}" method="POST" class="opacity-50">
                                 @csrf
                                 @method('delete')
                                 <button class="btn btn-error btn-sm" type="submit">Delete</button>
                             </form>
+                            @endauth
                         </div>
                     </div>
                 </div>

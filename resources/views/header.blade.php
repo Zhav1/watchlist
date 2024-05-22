@@ -16,7 +16,7 @@
                     <div tabindex="0" role="button" class="btn m-1 border-[#393939] border-2 border-solid rounded-2xl px-10 py-1.5">{{auth()->user()->name}}</div>
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
                     <li><a href="#" class="btn border-[#393939] border-2 border-solid rounded-2xl px-10 py-1.5 text-black">Dashboard</a></li>
-                    <li><a href="{{ route('user')}}" class="btn border-[#393939] border-2 border-solid rounded-2xl px-10 py-1.5 text-black">User</a></li>
+                    {{-- <li><a href="{{route('user')}}" class="btn border-[#393939] border-2 border-solid rounded-2xl px-10 py-1.5 text-black">User</a></li> --}}
                     <li>
                         <form action="/logout" method="POST">
                             @csrf

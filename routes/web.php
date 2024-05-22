@@ -8,19 +8,19 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
 
 Route::get('/', [MovieController::class, 'index']);
-Route::post('/', [MovieController::class, 'create']);
-Route::delete('/delete/{id}', [MovieController::class, 'deleteMovie']);
+Route::post('/', [MovieController::class, 'create'])->middleware('auth');
+Route::delete('/delete/{id}', [MovieController::class, 'deleteMovie'])->middleware('auth');
 
-route::get('/login',[logincontroller::class, 'index']);
+route::get('/login',[logincontroller::class, 'index'])->name('login')->middleware('guest');
 route::post('/login',[logincontroller::class, 'authenticate']);
-route::post('/logout',[logincontroller::class, 'logout']);
+route::post('/logout',[logincontroller::class, 'logout'])->middleware('auth');
 
-route::get('/register',[RegisterController::class, 'index']);
+route::get('/register',[RegisterController::class, 'index'])->middleware('guest');
 route::post('/register',[RegisterController::class, 'store']);
 Route::get('/{id}', [MovieController::class, 'show'])->name('movies.show');
 
 Route::post('/addComment', [CommentController::class, 'addComment'])->name('addComment');
-Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment']);
+Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment'])->middleware('auth');
 
 Route::get('/user', [UserController::class, 'index'])->name('user');
 

@@ -10,26 +10,30 @@
                 @foreach ($films as $film)
                     <div class="card card-compact w-1/2 bg-base-100 shadow-xl self-center reveal">
                         <figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure>
-                        <div class="card-body">
+                        <div class="card-body justify-between">
                             <h2 class="card-title">{{ $film->title }}</h2>
                             <p class="text-sm">{{ $film->plot }}</p>
-                            <div class="card-actions justify-end gap-8">
-                                <a href="{{ route('movies.show', ['id' => $film->id]) }}">
+                            <div class="flex flex-row justify-between">
+                                <div class="flex content-center">
+                                    <p class="text-sm text-center">Added by : {{auth()->user()->name}}</p>
+                                </div>
+                                <div class="card-actions justify-end gap-8">
                                     <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded">
-                                        View
+                                    <a href="{{ route('movies.show', ['id' => $film->id]) }}">View</a>
                                     </button>
-                                </a>
-                                <button class="btn btn-warning">Edit</button>
-                                @auth
-                                    <form action="/delete/{{ $film->id }}" method="post">
-                                    @csrf
-                                    @method('delete')
-                                        <button class="btn btn-error" type="submit">Delete</button>
-                                    </form>
-                                    @else
-                                    <button class="btn btn-error">Delete</button>
-                                @endauth
+                                    <button class="btn btn-warning">Edit</button>
+                                    @auth
+                                        <form action="/delete/{{ $film->id }}" method="post">
+                                        @csrf
+                                        @method('delete')
+                                            <button class="btn btn-error" type="submit">Delete</button>
+                                        </form>
+                                        @else
+                                        <button class="btn btn-error">Delete</button>
+                                    @endauth
+                                </div>
                             </div>
+
                         </div>
                     </div>
                 @endforeach
