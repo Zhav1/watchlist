@@ -21,7 +21,7 @@
                                     <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded">
                                     <a href="{{ route('movies.show', ['id' => $film->id]) }}">View</a>
                                     </button>
-                                    <button class="btn btn-warning">Edit</button>
+                                    <a href="{{ route('editMovie', ['id' => $film->id]) }}" class="btn btn-warning">Edit</a>                                
                                     @auth
                                         <form action="/delete/{{ $film->id }}" method="post">
                                         @csrf

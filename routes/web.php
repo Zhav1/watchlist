@@ -23,6 +23,9 @@ Route::post('/addComment', [CommentController::class, 'addComment'])->name('addC
 Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment'])->middleware('auth');
 
 Route::get('/user', [UserController::class, 'index'])->name('user');
+Route::get('/editMovie/{id}', [MovieController::class, 'editMovie'])->name('editMovie');
+Route::put('/updateMovie', [MovieController::class, 'updateMovie'])->name('updateMovie');
+
 
 
 
