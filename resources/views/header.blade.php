@@ -4,7 +4,7 @@
             <div class="size-10"><img src="img/image_2024-05-11_110207674-removebg-preview.png"></div>
             <div class="brand-name font-bold text-xl py-2 text-white">MovieStack</div>
         </div>
-        <div class="flex flex-row justify-evenly gap-x-10 py-7">
+        <div class="flex flex-row justify-evenly gap-x-10 place-items-center text-xs">
             <div><a href="/">Home</a></div>
             <div>My Watchlist</div>
             <div>Contact</div>
