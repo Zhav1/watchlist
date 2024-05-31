@@ -21,9 +21,12 @@ class logincontroller extends Controller
         ]);
 
         if(Auth::attempt($ValidateData)){
-            $request->session()->regenerate();
-
-            return redirect()->intended('/');
+            if(Auth()->user()->role == "user")
+            {
+                $request->session()->regenerate();
+                return redirect()->intended('/');
+            }else
+                return redirect();
         }
 
         return back()->with('loginError', 'Login failed!');

@@ -10,7 +10,7 @@
                     <p class="text-xl text-[#9E9FA0]">Transform your movie wishes into a blissful journey. With our watchlist, you can manage your must-see films and never miss a favorite</p>
                 </div>
                 <div class="basis-3/6 self-center flex justify-center">
-                    <button class="btn btn-wide bg-[#CFF245] hover:bg-[#AAC73C] place-self-center">Wide</button>
+                    <button class="btn btn-wide bg-[#CFF245] hover:bg-[#AAC73C] place-self-center"><a href="hero">Seach Your Movie</a></button>
                 </div>
             </div>
         </div>
@@ -60,11 +60,11 @@
                     </div>
                 </div>
             </div>
-            <div class="divider divider-neutral"></div> 
+            <div class="divider divider-neutral"></div>
                 <footer class="footer footer-center pb-4 bg-[#0D0E11] text-[#9E9FA0]">
                     <aside>
                         <p>Copyright © 2024 - All right reserved</p>
-                    </aside> 
+                    </aside>
                 </footer>
         </div>
     </div>

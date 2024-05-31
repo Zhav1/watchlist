@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('comments', function (Blueprint $table) {
             $table->id('comment_id');
             $table->unsignedBigInteger('movie_id');
-            $table->foreign('movie_id')
-                ->references('id')
-                ->on('movies')
-                ->onDelete('cascade');
+            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->date('tanggal')->nullable();
             $table->string('comment');
         });

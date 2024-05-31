@@ -70,7 +70,7 @@
                                 <div class="stats stats-vertical flex flex-col">
                                     <div class="stat gap-2">
                                         <div class="stat-title">Language</div>
-                                        <div class="stat-value text-2xl">{{ $film->language }}</div>
+                                        <div class="stat-value text-2xl text-pretty">{{ $film->language }}</div>
                                         <div class="stat-desc"></div>
                                     </div>
                                     <div class="stat gap-2">
@@ -82,17 +82,17 @@
                                         <div class="stat-title">Runtime</div>
                                         <div class="stat-value text-2xl">{{ $film->runtime }}</div>
                                         <div class="stat-desc"></div>
-                                    </div>  
-                                </div>  
+                                    </div>
+                                </div>
                                 <div class="stats stats-vertical flex flex-col">
                                     <div class="stat gap-2">
                                         <div class="stat-title">Director</div>
-                                        <div class="stat-value text-2xl">{{ $film->director }}</div>
+                                        <div class="stat-value text-2xl text-pretty">{{ $film->director }}</div>
                                         <div class="stat-desc"></div>
                                     </div>
                                     <div class="stat gap-2">
                                         <div class="stat-title">Writer</div>
-                                        <div class="stat-value text-2xl">{{ $film->writer }}</div>
+                                        <div class="stat-value text-2xl text-pretty">{{ $film->writer }}</div>
                                         <div class="stat-desc"></div>
                                     </div>
                                     <div class="stat gap-2">
@@ -100,7 +100,7 @@
                                         <div class="stat-value text-2xl">{{ $film->country }}</div>
                                         <div class="stat-desc"></div>
                                     </div>
-                                </div>    
+                                </div>
                             </div>
                             <div class="stats stats-vertical max-w-fit place-items-center">
                                 <div class="stat gap-2">
@@ -148,6 +148,7 @@
                             <div class="flex flex-col items-start">
                                 <div class="chat chat-start">
                                     <div class="chat-bubble bg-[#CFF245] text-black text-pretty break-words">{{ $comment->comment }}</div>
+                                    <div class="">Added by: {{$comment->user_id->name}}</div>
                                 </div>
                                 <div class="flex justify-between items-center mt-4 w-full">
                                     <p class="text-gray-500 text-sm">{{ $comment->tanggal }}</p>
@@ -169,6 +170,6 @@
         </section>
         @include('footer')
     </section>
-       
-    
+
+
 </body>

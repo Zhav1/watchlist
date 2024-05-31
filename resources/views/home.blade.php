@@ -9,7 +9,7 @@
             </div>
                 @foreach ($films as $film)
                     <div class="card card-compact w-1/2 bg-base-100 shadow-xl self-center reveal">
-                        <figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure>
+                        <a href="{{ route('movies.show', ['id' => $film->id]) }}"><figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure></a>
                         <div class="card-body justify-between">
                             <h2 class="card-title">{{ $film->title }}</h2>
                             <p class="text-sm">{{ $film->plot }}</p>
@@ -21,7 +21,7 @@
                                     <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded">
                                     <a href="{{ route('movies.show', ['id' => $film->id]) }}">View</a>
                                     </button>
-                                    <a href="{{ route('editMovie', ['id' => $film->id]) }}" class="btn btn-warning">Edit</a>                                
+                                    <a href="{{ route('editMovie', ['id' => $film->id]) }}" class="btn btn-warning">Edit</a>
                                     @auth
                                         <form action="/delete/{{ $film->id }}" method="post">
                                         @csrf

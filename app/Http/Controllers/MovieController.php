@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\Movie;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class MovieController extends Controller
@@ -35,6 +37,7 @@ class MovieController extends Controller
             $movieInfo = $response->json();
 
             Movie::create([
+                'imdbID' => $movieInfo['imdbID'],
                 'user_id' => auth::id(),
                 'title' => $movieInfo['Title'],
                 'plot' => $movieInfo['Plot'],
@@ -127,7 +130,6 @@ class MovieController extends Controller
     public function show($id)
     {
         $film = Movie::find($id);
-
         if (!$film) {
             return redirect('/')->with('error', 'Movie not found');
         }

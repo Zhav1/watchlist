@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\MovieController;
@@ -26,7 +27,7 @@ Route::get('/user', [UserController::class, 'index'])->name('user');
 Route::get('/editMovie/{id}', [MovieController::class, 'editMovie'])->name('editMovie');
 Route::put('/updateMovie', [MovieController::class, 'updateMovie'])->name('updateMovie');
 
-
+Route::get('/admin',[AdminController::class,'index'])->name('admin')->middleware('auth');
 
 
 

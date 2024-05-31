@@ -14,14 +14,20 @@ class Comment extends Model
     protected $fillable = [
         'tanggal',
         'movie_id',
+        'user_id',
         'comment'
-    ]; 
-	
+    ];
+
     protected $dates = [
         'tanggal',
     ];
-		public function film()
+	public function film()
     {
         return $this->belongsTo(Movie::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
