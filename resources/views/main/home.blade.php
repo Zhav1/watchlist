@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('main.layout')
 
 @section('main')
     <section class="bg-white rounded-xl relative w-full self-center reveal">
@@ -9,7 +9,7 @@
             </div>
                 @foreach ($films as $film)
                     <div class="card card-compact w-1/2 bg-base-100 shadow-xl self-center reveal">
-                        <a href="{{ route('movies.show', ['id' => $film->id]) }}"><figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure></a>
+                        <a href="{{ route('showMovies', ['id' => $film->id]) }}"><figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure></a>
                         <div class="card-body justify-between">
                             <h2 class="card-title">{{ $film->title }}</h2>
                             <p class="text-sm">{{ $film->plot }}</p>
@@ -19,7 +19,7 @@
                                 </div>
                                 <div class="card-actions justify-end gap-8">
                                     <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded">
-                                    <a href="{{ route('movies.show', ['id' => $film->id]) }}">View</a>
+                                    <a href="{{ route('showMovies', ['id' => $film->id]) }}">View</a>
                                     </button>
                                     <a href="{{ route('editMovie', ['id' => $film->id]) }}" class="btn btn-warning">Edit</a>
                                     @auth

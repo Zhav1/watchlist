@@ -19,7 +19,7 @@ class MovieController extends Controller
     public function index()
     {
         $movies = Movie::where('user_id', Auth::id())->get();
-        return view('home', ['films' => $movies]);
+        return view('main.home', ['films' => $movies]);
     }
 
     public function create(Request $request)

@@ -12,7 +12,7 @@
                         <span class="label-text-alt"></span>
                     </div>
                     @if ($errors->any())
-                        <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered input-error w-full border-4 text-black" name="movie_name"/>
+                        <input type="text" placeholder="Movie that you've just inputted is doesn't exist T_T" class="input input-bordered input-error w-full border-4 text-black" name="movie_name"/>
                     @else
                         <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered w-full text-black" name="movie_name"/>
                     @endif

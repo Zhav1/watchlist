@@ -7,7 +7,11 @@
         <div class="flex flex-row justify-evenly gap-x-10 place-items-center text-xs">
             <div><a href="/">Home</a></div>
             <div>My Watchlist</div>
-            <div>Contact</div>
+            <button>
+                <a href="{{ route('contactIndex') }}">
+                    <div>Contact Us!</div>
+                </a>
+            </button>
         </div>
         <div class="py-7">
             <div class="flex flex-row gap-2">

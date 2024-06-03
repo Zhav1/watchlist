@@ -168,7 +168,7 @@
                 </div>
             </section>
         </section>
-        @include('footer')
+        @include('main.footer')
     </section>
 
 

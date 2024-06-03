@@ -2,11 +2,12 @@
 
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\logincontroller;
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\MovieController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/', [MovieController::class, 'index']);
 Route::post('/', [MovieController::class, 'create'])->middleware('auth');
@@ -18,7 +19,7 @@ route::post('/logout',[logincontroller::class, 'logout'])->middleware('auth');
 
 route::get('/register',[RegisterController::class, 'index'])->middleware('guest');
 route::post('/register',[RegisterController::class, 'store']);
-Route::get('/{id}', [MovieController::class, 'show'])->name('movies.show');
+Route::get('/{id}', [MovieController::class, 'show'])->name('showMovies');
 
 Route::post('/addComment', [CommentController::class, 'addComment'])->name('addComment');
 Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment'])->middleware('auth');
@@ -28,6 +29,9 @@ Route::get('/editMovie/{id}', [MovieController::class, 'editMovie'])->name('edit
 Route::put('/updateMovie', [MovieController::class, 'updateMovie'])->name('updateMovie');
 
 Route::get('/admin',[AdminController::class,'index'])->name('admin')->middleware('auth');
+
+Route::get('/contact', [ContactController::class, 'index'])->name('contactIndex');
+Route::post('/contact', [ContactController::class, 'store'])->name('contactStore');
 
 
 
