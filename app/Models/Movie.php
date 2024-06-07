@@ -11,17 +11,22 @@ class Movie extends Model
 
     public $timestamps = false;
 
-    protected $guarded = ['id'];
+    protected $fillable = [
+            'title',
+            'plot',
+            'poster',
+            'genre',
+            'year',
+            'runtime',
+            'director',
+            'writer',
+            'country',
+            'language',
+    ];
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-    
 
 }

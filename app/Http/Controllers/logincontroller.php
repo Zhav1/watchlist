@@ -26,7 +26,7 @@ class logincontroller extends Controller
                 $request->session()->regenerate();
                 return redirect()->intended('/');
             }else
-                return redirect();
+                return redirect()->intended('admin');
         }
 
         return back()->with('loginError', 'Login failed!');

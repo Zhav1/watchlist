@@ -21,13 +21,13 @@ class Comment extends Model
     protected $dates = [
         'tanggal',
     ];
-	public function film()
+    public function movie()
     {
         return $this->belongsTo(Movie::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

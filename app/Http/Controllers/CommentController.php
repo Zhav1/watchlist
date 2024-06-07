@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +38,16 @@ class CommentController extends Controller
         return redirect('/' . $request->movie_id);
     }
 
-    public function deleteComment(Request $request)
+    public function deleteComment($id)
     {
-        Comment::where('comment_id', $request->id)->delete();
+        $comment = Comment::find($id);
+
+        if (!$comment) {
+            return redirect()->back()->withErrors(['Comment not found']);
+        }
+
+        $comment->delete();
+
         return redirect()->back();
     }
 }

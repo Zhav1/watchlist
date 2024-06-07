@@ -12,27 +12,22 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        $users = User::all();
-        return view('users.user', compact('users'));
+    public function index(){
+        return view('adminPage.users');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|unique:users',
+    public function store(Request $request){
+
+        $ValidateData = $request->validate([
+            'name' => 'required|max:255',
+            'email' => 'required|email:dns|unique:users',
+            'password' => 'required|min:5|max:255',
+            'role' => 'required'
         ]);
 
-        $user = new User;
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
+        User::create($ValidateData);
+
+        return redirect('admin');
+
     }
 }
