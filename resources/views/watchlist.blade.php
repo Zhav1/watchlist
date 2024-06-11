@@ -48,16 +48,36 @@
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Movie List</h1>
     
-        {{-- Genre Sorting Form --}}
+        {{-- Sorting Form --}}
         <form action="{{ url('/watchlists') }}" method="GET" class="mb-8">
-            <div class="flex justify-center">
-                <label for="sort_genre" class="mr-4 text-lg text-gray-700">Sort by Genre:</label>
-                <select name="sort_genre" id="sort_genre" class="form-select block w-48 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" onchange="this.form.submit()">
-                    <option value="">All Movie</option>
-                    @foreach(['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Adventure', 'Animation', 'Biography', 'Crime', 'Documentary', 'Family', 'Fantasy', 'History', 'Music', 'Musical', 'Mystery', 'Sport', 'Superhero', 'Thriller', 'War', 'Western'] as $genre)
-                        <option value="{{ $genre }}" {{ request('sort_genre') == $genre ? 'selected' : '' }}>{{ $genre }}</option>
-                    @endforeach
-                </select>
+            <div class="flex flex-wrap justify-center gap-4">
+                <div>
+                    <label for="sort_genre" class="mr-2 text-lg text-gray-700">Sort by Genre:</label>
+                    <select name="sort_genre" id="sort_genre" class="form-select block w-48 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" onchange="this.form.submit()">
+                        <option value="">All Genres</option>
+                        @foreach(['Action', 'Comedy', 'Drama', 'Horror', 'Romance', 'Sci-Fi', 'Adventure', 'Animation', 'Biography', 'Crime', 'Documentary', 'Family', 'Fantasy', 'History', 'Music', 'Musical', 'Mystery', 'Sport', 'Superhero', 'Thriller', 'War', 'Western'] as $genre)
+                            <option value="{{ $genre }}" {{ request('sort_genre') == $genre ? 'selected' : '' }}>{{ $genre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="sort_country" class="mr-2 text-lg text-gray-700">Sort by Country:</label>
+                    <select name="sort_country" id="sort_country" class="form-select block w-48 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" onchange="this.form.submit()">
+                        <option value="">All Countries</option>
+                        @foreach(['United States','Indonesia', 'UK', 'Canada', 'France', 'Germany', 'India', 'Japan', 'China', 'Australia', 'Spain'] as $country)
+                            <option value="{{ $country }}" {{ request('sort_country') == $country ? 'selected' : '' }}>{{ $country }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label for="sort_language" class="mr-2 text-lg text-gray-700">Sort by Language:</label>
+                    <select name="sort_language" id="sort_language" class="form-select block w-48 mt-1 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm" onchange="this.form.submit()">
+                        <option value="">All Languages</option>
+                        @foreach(['English','Indonesia', 'Spanish', 'French', 'German', 'Hindi', 'Japanese', 'Mandarin', 'Korean'] as $language)
+                            <option value="{{ $language }}" {{ request('sort_language') == $language ? 'selected' : '' }}>{{ $language }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
         </form>
     
