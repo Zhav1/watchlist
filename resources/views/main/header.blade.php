@@ -6,7 +6,7 @@
         </div>
         <div class="flex flex-row justify-evenly gap-x-10 place-items-center text-xs">
             <div><a href="/">Home</a></div>
-            <div>My Watchlist</div>
+            <div><a href="/watchlists">My Watchlist</a></div>
             @auth
             @if (auth()->user()->role == 'admin')
             <div><a href="{{ route('input') }}">Input User</a></div>

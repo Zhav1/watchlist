@@ -46,3 +46,5 @@ Route::get('/admin', [AdminController::class, 'index'])->name('admin')->middlewa
 // Contact routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contactIndex');
 Route::post('/contact', [ContactController::class, 'store'])->name('contactStore');
+
+Route::get('/watchlists', [MovieController::class, 'indexWatchlist'])->name('movies.index');

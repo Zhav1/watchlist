@@ -18,6 +18,19 @@ class MovieController extends Controller
         });
         return view('main.home', ['films' => $movies]);
     }
+    public function indexWatchlist(Request $request)
+    {
+        $sortGenre = $request->input('sort_genre');
+
+        if ($sortGenre) {
+            $films = Movie::where('genre', 'LIKE', "%{$sortGenre}%")->get();
+        } else {
+            $films = Movie::all();
+        }
+
+        return view('watchlist', compact('films', 'sortGenre'));
+    }
+
 
     public function search(Request $request)
     {

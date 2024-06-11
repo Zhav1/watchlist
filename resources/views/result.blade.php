@@ -22,7 +22,7 @@
                     </div>
                     <div class="flex flex-row justify-evenly gap-x-8 py-9">
                         <div><a href="/">Home</a></div>
-                        <div>My Watchlist</div>
+                        <div><a href="/watchlists">My Watchlist</a></div>
                         <div>Contact</div>
                     </div>
                     <div class="py-7">
