@@ -35,7 +35,7 @@ class CommentController extends Controller
         ]);
 
         // Redirect ke halaman film
-        return redirect('/' . $request->movie_id);
+        return redirect()->route('showMovies', ['id' => $request->movie_id])->with('success', 'Comment added successfully');
     }
 
     public function deleteComment($id)

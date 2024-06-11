@@ -11,8 +11,11 @@ use App\Http\Controllers\ContactController;
 
 // Home and movie routes
 Route::get('/', [MovieController::class, 'index']);
-Route::post('/', [MovieController::class, 'create'])->middleware('auth');
+Route::post('/', [MovieController::class, 'create'])->name('movies.create')->middleware('auth');
 Route::delete('/delete/{id}', [MovieController::class, 'deleteMovie'])->name('deleteMovie')->middleware('auth');
+
+// Search route
+Route::get('/search', [MovieController::class, 'search'])->name('movies.search')->middleware('auth');
 
 // Authentication routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -24,21 +27,21 @@ Route::get('/register', [RegisterController::class, 'index'])->middleware('guest
 Route::post('/register', [RegisterController::class, 'store']);
 
 // Movie specific routes
-Route::get('/{id}', [MovieController::class, 'show'])->name('showMovies');
-Route::get('/editMovie/{id}', [MovieController::class, 'editMovie'])->name('editMovie');
-Route::put('/updateMovie', [MovieController::class, 'updateMovie'])->name('updateMovie');
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('showMovies');  // Changed to avoid conflict with home route
+Route::get('/editMovie/{id}', [MovieController::class, 'editMovie'])->name('editMovie')->middleware('auth');
+Route::put('/updateMovie', [MovieController::class, 'updateMovie'])->name('updateMovie')->middleware('auth');
 
 // Comment routes
-Route::post('/addComment', [CommentController::class, 'addComment'])->name('addComment');
-Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment'])->name('deleteComment');
+Route::post('/addComment', [CommentController::class, 'addComment'])->name('addComment')->middleware('auth');
+Route::delete('/deleteComment/{id}', [CommentController::class, 'deleteComment'])->name('deleteComment')->middleware('auth');
 
 // User routes
-Route::get('/user', [UserController::class, 'index'])->name('user');
+Route::get('/user', [UserController::class, 'index'])->name('user')->middleware('auth');
 Route::get('/input', [UserController::class, 'index'])->name('input')->middleware('auth');
-Route::post('/input', [UserController::class, 'store']);
+Route::post('/input', [UserController::class, 'store'])->middleware('auth');
 
 // Admin routes
-Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+Route::get('/admin', [AdminController::class, 'index'])->name('admin')->middleware('auth');
 
 // Contact routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contactIndex');

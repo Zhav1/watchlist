@@ -2,7 +2,7 @@
     <div class="flex flex-col items-center justify-center gap-20">
         <div class="flex flex-col">
             <div class="scale-100 size-4/6 place-self-center">
-                <img src="img/cylinder.png" alt="">
+                <img src="{{ asset('img/cylinder.png') }}" alt="">
             </div>
             <div class="flex flex-row">
                 <div class="flex flex-col gap-8 basis-3/6 ">
@@ -18,7 +18,7 @@
             <div class="flex flex-row">
                 <div class="flex flex-grow card rounded-box place-content-center basis-3/12">
                     <div class="flex flex-row gap-2 py-5">
-                        <div class="size-10"><img src="img/image_2024-05-11_110207674-removebg-preview.png"></div>
+                        <div class="size-10"><img src={{ asset('img/image_2024-05-11_110207674-removebg-preview.png') }}></div>
                         <div class="brand-name font-bold text-xl py-2 text-white">MovieStack</div>
                     </div>
                 </div>

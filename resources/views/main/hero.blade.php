@@ -1,10 +1,10 @@
 <section class="flex flex-col">
     <div class="flex flex-col gap-6 z-10">
-        <div class="badge bg-[#CFF245] self-center">Free</div>
+        <div class="badge bg-[#CFF245] self-center p-3">Free</div>
         <h1 class="text-5xl text-center">Your Personalize Movie Playlist Awaits!</h1>
         <p class="text-xl text-center font-extralight w-1/2 place-self-center text-[#9E9FA0]">MovieStack is your go-to destination for managing and curating your personal movie watchlist.</p>
         <div class="inline-block self-center w-3/6 content-center">
-            <form action="/" method="post">
+            <form action="{{ route('movies.search') }}" method="get">
             @csrf
                 <label class="form-control w-full flex flex-row">
                     <div class="label">
@@ -14,7 +14,7 @@
                     @if ($errors->any())
                         <input type="text" placeholder="Movie that you've just inputted is doesn't exist T_T" class="input input-bordered input-error w-full border-4 text-black" name="movie_name"/>
                     @else
-                        <input type="text" placeholder="Enter a movie you want to watch later?" class="input input-bordered w-full text-black" name="movie_name"/>
+                        <input type="text" placeholder="Enter a movie that you wanna watch later?" class="input input-bordered w-full text-black" name="movie_name"/>
                     @endif
                     <div class="label">
                         <span class="label-text-alt"></span>

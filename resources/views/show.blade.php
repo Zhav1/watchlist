@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $film->title }}</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/script.js"></script>
+    <link rel="stylesheet" href={{ asset('css/styles.css') }}>
+    <script src={{ asset('js/script.js') }}></script>
     @vite('resources/css/app.css')
 </head>
 
@@ -18,13 +18,17 @@
             <section class="flex flex-col px-5 gap-12 text-white">
                 <div class="flex flex-row justify-between">
                     <div class="flex flex-row gap-2 py-5">
-                        <div class="size-10"><img src="img/image_2024-05-11_110207674-removebg-preview.png"></div>
+                        <div class="size-10"><img src={{ asset('img/image_2024-05-11_110207674-removebg-preview.png') }}></div>
                         <div class="brand-name font-bold text-xl py-2 text-white">MovieStack</div>
                     </div>
                     <div class="flex flex-row justify-evenly gap-x-8 py-9">
                         <div><a href="/">Home</a></div>
                         <div>My Watchlist</div>
-                        <div>Contact</div>
+                        <button>
+                            <a href="{{ route('contactIndex') }}">
+                                <div>Contact Us!</div>
+                            </a>
+                        </button>
                     </div>
                     <div class="py-7">
                         <div class="flex flex-row gap-2">
@@ -60,7 +64,7 @@
                     </div>
                 </div>
                 <div class="flex flex-col gap-8">
-                    <div class="badge bg-[#CFF245] self-center">My Watchlist</div>
+                    <div class="badge bg-[#CFF245] self-center p-3">My Watchlist</div>
                     <div class="text-7xl text-center">
                         <h1>{{ $film->title }}</h1>
                     </div>
@@ -119,7 +123,7 @@
                             <div class="stats stats-vertical max-w-fit">
                                 <div class="stat gap-2">
                                     <div class="stat-title">Plot</div>
-                                    <div class="stat-value text-lg text-pretty ">{{ $film->plot }}</div>
+                                    <div class="text-lg text-pretty ">{{ $film->plot }}</div>
                                 </div>
                             </div>
                         </div>
@@ -160,9 +164,9 @@
                                 <div class="flex flex-col items-start">
                                     <div class="">{{ $comment->user->name }}</div>
                                     <div class="chat chat-start p-4">
-                                        <div class="bg-[#CFF245] text-black text-pretty break-words p-2 rounded-xl w-fit">
+                                        <div class="bg-[#CFF245] text-black text-pretty break-words p-2 py-3 rounded-xl w-fit">
                                             {{ $comment->comment }}</div>
-                                    </div>
+                                        </div>
                                     <div class="flex justify-between items-center mt-4 w-full">
                                         <p class="text-gray-500 text-sm">{{ $comment->tanggal }}</p>
                                         @auth

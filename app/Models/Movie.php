@@ -12,6 +12,7 @@ class Movie extends Model
     public $timestamps = false;
 
     protected $fillable = [
+            'imdbID',
             'title',
             'plot',
             'poster',
