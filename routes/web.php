@@ -50,3 +50,5 @@ Route::middleware(['auth'])->group(function () {
 // Contact routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contactIndex');
 Route::post('/contact', [ContactController::class, 'store'])->name('contactStore');
+
+Route::get('/watchlists', [MovieController::class, 'indexWatchlist'])->name('movies.index');

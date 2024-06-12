@@ -18,6 +18,32 @@ class MovieController extends Controller
         });
         return view('main.home', ['films' => $movies]);
     }
+    public function indexWatchlist(Request $request)
+    {
+        $sortGenre = $request->input('sort_genre');
+        $sortCountry = $request->input('sort_country');
+        $sortLanguage = $request->input('sort_language');
+    
+        $query = Movie::query();
+    
+        if ($sortGenre) {
+            $query->where('genre', 'LIKE', "%{$sortGenre}%");
+        }
+    
+        if ($sortCountry) {
+            $query->where('country', 'LIKE', "%{$sortCountry}%");
+        }
+    
+        if ($sortLanguage) {
+            $query->where('language', 'LIKE', "%{$sortLanguage}%");
+        }
+    
+        $films = $query->get();
+    
+        return view('watchlist', compact('films', 'sortGenre', 'sortCountry', 'sortLanguage'));
+    }
+    
+
 
     public function search(Request $request)
     {
