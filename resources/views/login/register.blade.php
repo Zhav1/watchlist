@@ -10,11 +10,11 @@
   <script src="js/script.js"></script>
   @vite('resources/css/app.css')
 </head>
-<body class="h-full">
+<body class="h-full bg-[#0D0E11] text-white">
 <div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
-      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Registration your account</h2>
+      <img class="mx-auto h-10 w-auto" src="{{ asset('img/image_2024-05-11_110207674-removebg-preview.png') }}" alt="Your Company">
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">Registrate your account</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -22,11 +22,11 @@
         @csrf
         {{-- Form Username --}}
         <div>
-            <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Username</label>
+            <label for="name" class="block text-sm font-medium leading-6 text-white">Username</label>
             <div class="mt-2">
               <input id="name" name="name" type="text" autocomplete="name" value="{{old('name')}}" required class="@error('name')
                 is-invalid
-              @enderror w-full rounded-md border-0 px-2 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+              @enderror w-full rounded-md border-0 px-2 py-3 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
             </div>
         </div>
         {{-- End Form Username --}}
@@ -37,11 +37,11 @@
         @enderror
         {{-- Form Email --}}
         <div>
-          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+          <label for="email" class="block text-sm font-medium leading-6 text-white">Email address</label>
           <div class="mt-2">
             <input id="email" name="email" type="email" autocomplete="email" value="{{old('email')}}" required class="@error('email')
             is-invalid
-          @enderror block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          @enderror block w-full rounded-md border-0 py-1.5 px-3 text-black shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         {{-- End Form Email --}}
@@ -53,12 +53,12 @@
         {{-- Form password --}}
         <div>
           <div class="flex items-center justify-between">
-            <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+            <label for="password" class="block text-sm font-medium leading-6 text-white">Password</label>
           </div>
           <div class="mt-2">
             <input id="password" name="password" type="password" autocomplete="current-password" required class="@error('password')
             is-invalid
-          @enderror block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+          @enderror block w-full rounded-md border-0 py-1.5 px-2 text-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         {{-- End Form password --}}
@@ -68,13 +68,13 @@
         </div>
         @enderror
         <div>
-          <button type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registration</button>
+          <button type="submit" class="flex w-full justify-center rounded-md bg-[#CFF245] hover:bg-[#AAC73C] px-3 py-1.5 text-sm font-semibold leading-6 text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Registration</button>
         </div>
       </form>
       <p class="mt-10 text-center text-sm text-gray-500">
         Already Register?
-        <a href="/login" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Login here! | </a>
-        <a href="/" class="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">Return Here!</a>
+        <a href="/login" class="font-semibold leading-6 text-[#CFF245] hover:text-[#AAC73C]">Login here! | </a>
+        <a href="/" class="font-semibold leading-6 text-[#CFF245] hover:text-[#AAC73C]">Return T_T</a>
       </p>
     </div>
   </div>

@@ -12,12 +12,16 @@
 </head>
 
 <body class="bg-[#0D0E11] overflow-x-auto flex flex-col">
-  <section class="flex flex-col gap-8">
-    <section class="flex flex-col gap-20 text-white">
-      @include('main.header')
-      @include('main.hero')
+  <section class="flex flex-col">    
+    <section class="flex flex-col text-white">
+      @include('adminPage.header')
+      <div class="flex flex-col gap-8 py-24">
+          <div class="text-7xl text-center">
+              <h1>Admin Page</h1>
+          </div>
+      </div>
+    @yield('admin')
     </section>
-    @yield('main')
     @include('main.footer')
   </section>
 </body>

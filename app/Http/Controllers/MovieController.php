@@ -12,39 +12,40 @@ class MovieController extends Controller
 {
     public function index()
     {
-        $watchlists = Watchlist::where('user_id', Auth::id())->with('movie')->get();
-        $movies = $watchlists->map(function ($watchlist) {
-            return $watchlist->movie;
-        });
-        return view('main.home', ['films' => $movies]);
+        return view('main.home');
     }
     public function indexWatchlist(Request $request)
-    {
-        $sortGenre = $request->input('sort_genre');
-        $sortCountry = $request->input('sort_country');
-        $sortLanguage = $request->input('sort_language');
+{
+    $userId = Auth::id();
     
-        $query = Movie::query();
-    
-        if ($sortGenre) {
-            $query->where('genre', 'LIKE', "%{$sortGenre}%");
-        }
-    
-        if ($sortCountry) {
-            $query->where('country', 'LIKE', "%{$sortCountry}%");
-        }
-    
-        if ($sortLanguage) {
-            $query->where('language', 'LIKE', "%{$sortLanguage}%");
-        }
-    
-        $films = $query->get();
-    
-        return view('watchlist', compact('films', 'sortGenre', 'sortCountry', 'sortLanguage'));
+    $sortGenre = $request->input('sort_genre');
+    $sortCountry = $request->input('sort_country');
+    $sortLanguage = $request->input('sort_language');
+
+    $watchlists = Watchlist::where('user_id', $userId)->with('movie')->get();
+    $movies = $watchlists->map(function ($watchlist) {
+        return $watchlist->movie;
+    });
+
+    if ($sortGenre) {
+        $movies = $movies->filter(function ($movie) use ($sortGenre) {
+            return stripos($movie->genre, $sortGenre) !== false;
+        });
     }
-    
 
+    if ($sortCountry) {
+        $movies = $movies->filter(function ($movie) use ($sortCountry) {
+            return stripos($movie->country, $sortCountry) !== false;
+        });
+    }
 
+    if ($sortLanguage) {
+        $movies = $movies->filter(function ($movie) use ($sortLanguage) {
+            return stripos($movie->language, $sortLanguage) !== false;
+        });
+    }
+    return view('watchlist', compact('movies', 'sortGenre', 'sortCountry', 'sortLanguage'));
+}
     public function search(Request $request)
     {
         $request->validate([
@@ -54,6 +55,10 @@ class MovieController extends Controller
         $movieName = $request->input('movie_name');
         $apiKey = env('OMDB_API_KEY');
         $response = Http::get("http://www.omdbapi.com/?s={$movieName}&apikey={$apiKey}");
+
+        if ($response->failed()) {
+        return redirect()->back()->withErrors(['There was an error with the OMDB API request.']);
+        }
 
         if ($response->successful() && isset($response['Search'])) {
             $movies = $response->json()['Search'];
@@ -72,7 +77,7 @@ class MovieController extends Controller
                 'user_id' => Auth::id(),
                 'movie_id' => $movie->id,
             ]);
-            return redirect('/')->with('success', 'Film sudah ada di watchlist Anda');
+            return redirect('/watchlists')->with('success', 'Film sudah ada di watchlist Anda');
         } 
         else {    
             $apiKey = env('OMDB_API_KEY');
@@ -102,7 +107,7 @@ class MovieController extends Controller
                     'movie_id' => $movie->id,
                 ]);
 
-                return redirect('/')->with('success', 'Film berhasil ditambahkan ke watchlist');
+                return redirect('/watchlists')->with('success', 'Film berhasil ditambahkan ke watchlist');
             } else {
                 return redirect('/')->withErrors(['Film tidak ditemukan']);
             }
@@ -152,7 +157,7 @@ class MovieController extends Controller
     public function deleteMovie(Request $request)
     {
         Movie::where('id', $request->id)->delete();
-        return redirect('/');
+        return redirect('/movie');
     }
 
     public function show($id)
@@ -163,5 +168,17 @@ class MovieController extends Controller
         }
 
         return view('show', compact('film'));
+    }
+
+    public function deletewatchlist($id)
+    {
+        // Assuming Watchlist has user_id and movie_id columns
+        $watchlistItem = Watchlist::where('user_id', auth()->id())->where('movie_id', $id)->first();
+
+        if ($watchlistItem) {
+            $watchlistItem->delete();
+        }
+
+        return redirect()->back()->with('status', 'Movie removed from your watchlist!');
     }
 }
