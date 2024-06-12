@@ -47,8 +47,8 @@ class MovieController extends Controller
                 'movie_id' => $movie->id,
             ]);
             return redirect('/')->with('success', 'Film sudah ada di watchlist Anda');
-        } 
-        else {    
+        }
+        else {
             $apiKey = env('OMDB_API_KEY');
             $response = Http::get("http://www.omdbapi.com/?i={$imdbID}&apikey={$apiKey}");
 

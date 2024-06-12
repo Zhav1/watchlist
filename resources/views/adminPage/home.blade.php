@@ -1,42 +1,79 @@
-@extends('adminpage.layout')
+@extends('adminPage.layout')
 
-@section('main')
-    <section class="bg-white rounded-xl relative w-full self-center reveal">
-        <div class="flex flex-col py-20 gap-12">
-            <div class="badge bg-[#CFF245] place-self-center">Watchlist</div>
-            <div class="w-3/4 place-self-center">
-                <h1 class="text-4xl text-center">Create your personalized movie watchlist to track and organize films you want to see, ensuring you never miss out on your favorites!</h1>
+@section('admin')
+    <section class="bg-white rounded-xl w-full relative h-max p-6 flex flex-col gap-10">
+        <div class="stats shadow border-4">
+            <div class="stat place-items-center">
+                <div class="stat-title">MOVIES</div>
+                <div class="stat-value">{{ $totalMovies }}</div>
+                <div class="stat-desc">TOTAL</div>
             </div>
-                @foreach ($movies as $film)
-                    <div class="card card-compact w-1/2 bg-base-100 shadow-xl self-center reveal">
-                        <a href="{{ route('showMovies', ['id' => $film->id]) }}"><figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure></a>
-                        <div class="card-body justify-between">
-                            <h2 class="card-title">{{ $film->title }}</h2>
-                            <p class="text-sm">{{ $film->plot }}</p>
-                            <div class="flex flex-row justify-between">
-                                <div class="flex content-center">
-                                    <p class="text-sm text-center">Added by : {{user()->name}}</p>
-                                </div>
-                                <div class="card-actions justify-end gap-8">
-                                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded">
-                                    <a href="{{ route('showMovies', ['id' => $film->id]) }}">View</a>
-                                    </button>
-                                    <a href="{{ route('editMovie', ['id' => $film->id]) }}" class="btn btn-warning">Edit</a>
-                                    @auth
-                                        <form action="/delete/{{ $film->id }}" method="post">
-                                        @csrf
-                                        @method('delete')
-                                            <button class="btn btn-error" type="submit">Delete</button>
-                                        </form>
-                                        @else
-                                        <button class="btn btn-error">Delete</button>
-                                    @endauth
-                                </div>
-                            </div>
+            <div class="stat place-items-center">
+                <div class="stat-title">USERS</div>
+                <div class="stat-value">{{ $totalUsers }}</div>
+                <div class="stat-desc">TOTAL</div>
+            </div>
+            <div class="stat place-items-center">
+                <div class="stat-title">COMMENTS</div>
+                <div class="stat-value">{{ $totalComments }}</div>
+                <div class="stat-desc">TOTAL</div>
+            </div>
+        </div>
 
-                        </div>
-                    </div>
-                @endforeach
+        <h2 class="text-2xl text-gray-700">Movie List</h2>
+        <div class="overflow-x-auto">
+            <table class="table bg-neutral">
+                <!-- head -->
+                <thead class="text-white">
+                    <tr>
+                        <th>No</th>
+                        <th>Movie Name</th>
+                        <th>Total Users</th>
+                        <th>Total Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($comments as $item)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $item->title }}</td>
+                            <td>{{ $item->users_count }}</td> <!-- Jumlah user yang memiliki movie ini -->
+                            <td>{{ $item->comments_count }}</td> <!-- Jumlah komentar untuk movie ini -->
+                        </tr>
+                    @endforeach
+                </tbody>
+                <h4 class="text-1xl text-blue-500"><a href="{{ route('detailmovie') }}">Detail Movies-></a></h3>
+            </table>
+            {{-- Menambahkan pagination links --}}
+            {{ $comments->links() }}
+        </div>
+
+        <h2 class="text-2xl text-gray-700">User List</h2>
+        <div class="overflow-x-auto">
+            <table class="table bg-neutral">
+                <!-- head -->
+                <thead class="text-white">
+                    <tr>
+                        <th>No</th>
+                        <th>User Name</th>
+                        <th>Total Movies in Watchlist</th>
+                        <th>Total Comments</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($users as $user)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->watchlists_count }}</td>
+                            <td>{{ $user->comments_count }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+                <h4 class="text-1xl text-blue-500"><a href="{{ route('detailuser') }}">Detail Users-></a></h3>
+            </table>
+            {{-- Menambahkan pagination links --}}
+            {{ $users->links() }}
         </div>
     </section>
 @endsection

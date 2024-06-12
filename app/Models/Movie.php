@@ -30,4 +30,9 @@ class Movie extends Model
         return $this->hasMany(Comment::class);
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'watchlists', 'movie_id', 'user_id');
+    }
+
 }

@@ -41,7 +41,11 @@ Route::get('/input', [UserController::class, 'index'])->name('input')->middlewar
 Route::post('/input', [UserController::class, 'store'])->middleware('auth');
 
 // Admin routes
-Route::get('/admin', [AdminController::class, 'index'])->name('admin')->middleware('auth');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::get('/movie', [AdminController::class, 'detailmovies'])->name('detailmovie');
+    Route::get('/user', [AdminController::class, 'detailuser'])->name('detailuser');
+});
 
 // Contact routes
 Route::get('/contact', [ContactController::class, 'index'])->name('contactIndex');
