@@ -20,32 +20,37 @@
         <section class="bg-white rounded-xl w-full relative h-max p-6 flex flex-col gap-10">
             <div class="overflow-x-auto">
                 <table class="table table-xs bg-neutral">
-                  <thead class="text-white">
-                    <tr>
-                      <th></th>
-                      <th>Movie Name</th>
-                      <th>Genre</th>
-                      <th>Year</th>
-                      <th>Run-Time</th>
-                      <th>Director</th>
-                      <th>Writer</th>
-                      <th>Country</th>
-                      <th>Language</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th>1</th>
-                      <td>Cy Ganderton</td>
-                      <td>Quality Control Specialist</td>
-                      <td>Littel, Schaden and Vandervort</td>
-                      <td>Canada</td>
-                      <td>12/16/2020</td>
-                      <td>Blue</td>
-                    </tr>
-                  </tfoot>
+                    <thead class="text-white">
+                        <tr>
+                            <th></th>
+                            <th>Movie Name</th>
+                            <th>Genre</th>
+                            <th>Year</th>
+                            <th>Run-Time</th>
+                            <th>Director</th>
+                            <th>Writer</th>
+                            <th>Country</th>
+                            <th>Language</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($movies as $item)
+                            <tr>
+                                <th>{{ $item->id }}</th>
+                                <td>{{ $item->title }}</td>
+                                <td>{{ $item->genre }}</td>
+                                <td>{{ $item->year }}</td>
+                                <td>{{ $item->runtime }}</td>
+                                <td>{{ $item->director }}</td>
+                                <td>{{ $item->writer }}</td>
+                                <td>{{ $item->country }}</td>
+                                <td>{{ $item->language }}</td>
+                            </tr>
+                        @endforeach
+                        </tfoot>
                 </table>
-              </div>
+            </div>
         </section>
+        @include('main.footer')
     </section>
 </body>

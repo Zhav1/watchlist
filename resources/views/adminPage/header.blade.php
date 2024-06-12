@@ -6,7 +6,8 @@
         </div>
         <div class="flex flex-row justify-evenly gap-x-10 place-items-center text-xs">
             <div><a href="{{route('admin')}}">Home</a></div>
-            <div>My Watchlist</div>
+            <div><a href="{{route('detailmovie')}}">Movies</a></div>
+            <div><a href="{{route('detailuser')}}">Users</a></div>
             <div><a href="{{ route('input') }}">Input User</a></div>
         </div>
         <div class="py-7">

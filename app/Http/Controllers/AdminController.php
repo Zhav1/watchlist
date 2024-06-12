@@ -35,7 +35,21 @@ class AdminController extends Controller
 
     public function detailmovies()
     {
-        return view('adminPage.detailmovie');
+        $movies = Movie::all(); // Mengambil semua data movie dari database
+
+        return view('adminPage.detailmovie', [
+            'movies' => $movies
+        ]);
     }
+
+    public function detailuser()
+    {
+        $users = User::all()->where('role','user'); // Mengambil semua data user dari database
+
+        return view('adminPage.detailuser', [
+            'users' => $users
+        ]);
+    }
+
 
 }
