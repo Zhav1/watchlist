@@ -44,10 +44,10 @@
             </div>
         </div>
     </header>
-    
+
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-4xl font-bold text-center text-gray-800 mb-8">Movie List</h1>
-    
+
         {{-- Sorting Form --}}
         <form action="{{ url('/watchlists') }}" method="GET" class="mb-8">
             <div class="flex flex-wrap justify-center gap-4">
@@ -80,10 +80,10 @@
                 </div>
             </div>
         </form>
-    
+
         {{-- Movies List --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        @foreach ($films as $film)
+        @foreach ($movies as $film)
             <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform duration-300">
                 <a href="{{ route('showMovies', ['id' => $film->id]) }}">
                     <figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" class="w-full h-64 object-cover" /></figure>
@@ -112,7 +112,7 @@
         @endforeach
         </div>
     </div>
-    
+
     <script>
         // Toggle the dropdown menu
         document.querySelector('.dropdown > button').addEventListener('click', function() {

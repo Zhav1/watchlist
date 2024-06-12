@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Contact;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -15,6 +16,7 @@ class AdminController extends Controller
         $totalMovies = Movie::count();
         $totalUsers = User::where('role', 'user')->count();
         $totalComments = Comment::count();
+        $contacts = Contact::all();
 
         // Query untuk mendapatkan data users dan comments dengan pagination
         $users = User::withCount(['watchlists', 'comments'])
@@ -30,6 +32,7 @@ class AdminController extends Controller
             'totalMovies' => $totalMovies,
             'totalUsers' => $totalUsers,
             'totalComments' => $totalComments,
+            'contacts' => $contacts,
         ]);
     }
 

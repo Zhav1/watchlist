@@ -20,29 +20,38 @@ class MovieController extends Controller
     }
     public function indexWatchlist(Request $request)
     {
+        $userId = Auth::id();
+
         $sortGenre = $request->input('sort_genre');
         $sortCountry = $request->input('sort_country');
         $sortLanguage = $request->input('sort_language');
-    
-        $query = Movie::query();
-    
+
+        $watchlists = Watchlist::where('user_id', $userId)->with('movie')->get();
+        $movies = $watchlists->map(function ($watchlist) {
+            return $watchlist->movie;
+        });
+
         if ($sortGenre) {
-            $query->where('genre', 'LIKE', "%{$sortGenre}%");
+            $movies = $movies->filter(function ($movie) use ($sortGenre) {
+                return stripos($movie->genre, $sortGenre) !== false;
+            });
         }
-    
+
         if ($sortCountry) {
-            $query->where('country', 'LIKE', "%{$sortCountry}%");
+            $movies = $movies->filter(function ($movie) use ($sortCountry) {
+                return stripos($movie->country, $sortCountry) !== false;
+            });
         }
-    
+
         if ($sortLanguage) {
-            $query->where('language', 'LIKE', "%{$sortLanguage}%");
+            $movies = $movies->filter(function ($movie) use ($sortLanguage) {
+                return stripos($movie->language, $sortLanguage) !== false;
+            });
         }
-    
-        $films = $query->get();
-    
-        return view('watchlist', compact('films', 'sortGenre', 'sortCountry', 'sortLanguage'));
+
+        return view('watchlist', compact('movies', 'sortGenre', 'sortCountry', 'sortLanguage'));
     }
-    
+
 
 
     public function search(Request $request)
@@ -73,8 +82,7 @@ class MovieController extends Controller
                 'movie_id' => $movie->id,
             ]);
             return redirect('/')->with('success', 'Film sudah ada di watchlist Anda');
-        }
-        else {
+        } else {
             $apiKey = env('OMDB_API_KEY');
             $response = Http::get("http://www.omdbapi.com/?i={$imdbID}&apikey={$apiKey}");
 

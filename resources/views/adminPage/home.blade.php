@@ -19,7 +19,8 @@
                 <div class="stat-desc">TOTAL</div>
             </div>
         </div>
-
+        {{-- Movies list --}}
+        @if ($comments->isNotEmpty())
         <h2 class="text-2xl text-gray-700">Movie List</h2>
         <div class="overflow-x-auto">
             <table class="table bg-neutral">
@@ -47,7 +48,11 @@
             {{-- Menambahkan pagination links --}}
             {{ $comments->links() }}
         </div>
+        @endif
+        {{-- End Movies List --}}
 
+        {{-- Users List --}}
+        @if ($users->isNotEmpty())
         <h2 class="text-2xl text-gray-700">User List</h2>
         <div class="overflow-x-auto">
             <table class="table bg-neutral">
@@ -75,5 +80,36 @@
             {{-- Menambahkan pagination links --}}
             {{ $users->links() }}
         </div>
+        @endif
+        {{-- End Users List --}}
+
+        {{-- Detail Contact --}}
+        @if ($contacts->isNotEmpty())
+            <h2 class="text-2xl text-gray-700">Detail Contact From User</h2>
+            <div class="overflow-x-auto">
+                <table class="table bg-neutral">
+                    <!-- head -->
+                    <thead class="text-white">
+                        <tr>
+                            <th>No</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($contacts as $item)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $item->contact_name }}</td>
+                                <td>{{ $item->contact_email }}</td>
+                                <td>{{ $item->contact_text }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+        {{-- End Detail Contact --}}
     </section>
 @endsection
