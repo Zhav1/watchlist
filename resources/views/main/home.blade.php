@@ -1,102 +1,166 @@
-@extends('main.layout')
+    <section class="bg-[#0D0E11] rounded-xl relative w-full self-center flex flex-col px-20 gap-10">
+        <div class="flex flex-col pt-20 gap-8">
+            <div class="place-self-start flex flex-col gap-2 grow w-full">
+                <div class="text-[#CFF245] text-[28px]">Top Rated Movies</div>
+                <h1 class="text-base text-[#9E9FA0]">The best-reviewed films, according to critics and audiences alike.
+                </h1>
+            </div>
+            <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
+                @foreach ($topRatedMovies as $content)
+                   <div class="carousel-item scale-95">
+                    <a href="{{ route('showMovies', ['id'=> $content['id']]) }}" class="flex flex-col gap-4 items-center">
+                        <img src="{{ $content['image'] }}" class="rounded-lg h-[410px] w-[270px] object-cover transition-transform duration-300 hover:scale-105" />
+                        <div class="pl-1 text-lg text-white max-w-64 text-center hover:text-[#CFF245] transition duration-300">{{ $content['name'] }}</div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="flex flex-col gap-8">
+            <div class="place-self-start flex flex-col gap-2 grow w-full">
+                <div class="text-[#CFF245] text-[28px]">Action Packed</div>
+                <h1 class="text-base text-[#9E9FA0]">Get your adrenaline rushing with the most thrilling action films.
+                </h1>
+            </div>
+            <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
+                @foreach ($actionMovies as $content)
+                    <div class="carousel-item scale-95">
+                    <a href="{{ route('showMovies', ['id'=> $content['id']]) }}" class="flex flex-col gap-4 items-center">
+                        <img src="{{ $content['image'] }}" class="rounded-lg h-[410px] w-[270px] object-cover transition-transform duration-300 hover:scale-105" />
+                        <div class="pl-1 text-lg text-white max-w-64 text-center hover:text-[#CFF245] transition duration-300 mt-2">{{ $content['name'] }}</div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="flex flex-col gap-8">
+            <div class="place-self-start flex flex-col gap-2 grow w-full">
+                <div class="text-[#CFF245] text-[28px]">Romantic Tales</div>
+                <h1 class="text-base text-[#9E9FA0]">Feel the love with movies that capture the beauty, passion, and
+                    heartbreak of romance</h1>
+            </div>
+            <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
+                 @foreach ($romanceMovies as $content)
+                    <div class="carousel-item scale-95">
+                    <a href="{{ route('showMovies', ['id'=> $content['id']]) }}" class="flex flex-col gap-4 items-center">
+                        <img src="{{ $content['image'] }}" class="rounded-lg h-[410px] w-[270px] object-cover transition-transform duration-300 hover:scale-105" />
+                        <div class="pl-1 text-lg text-white max-w-64 text-center hover:text-[#CFF245] transition duration-300 mt-2">{{ $content['name'] }}</div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="flex flex-col gap-8">
+            <div class="place-self-start flex flex-col gap-2 grow w-full">
+                <div class="text-[#CFF245] text-[28px]">Dramatic Masterpieces</div>
+                <h1 class="text-base text-[#9E9FA0]">Dive into powerful stories and emotional performances that leave a lasting impact.</h1>
+            </div>
+            <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
+                 @foreach ($dramaMovies as $content)
+                    <div class="carousel-item scale-95">
+                    <a href="{{ route('showMovies', ['id'=> $content['id']]) }}" class="flex flex-col gap-4 items-center">
+                        <img src="{{ $content['image'] }}" class="rounded-lg h-[410px] w-[270px] object-cover transition-transform duration-300 hover:scale-105" />
+                        <div class="pl-1 text-lg text-white max-w-64 text-center hover:text-[#CFF245] transition duration-300 mt-2">{{ $content['name'] }}</div>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        <div class="flex flex-col gap-8">
+            <div class="place-self-start flex flex-col gap-2 grow w-full">
+                <div class="text-[#CFF245] text-[28px]">Recommended for You</div>
+                <h1 class="text-base text-[#9E9FA0]">Personalized picks tailored to your taste—discover movies you'll
+                    love.</h1>
+            </div>
+            <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+                <div class="carousel-item flex flex-col gap-2">
+                    <img src="https://m.media-amazon.com/images/M/MV5BYTkzMjc0YzgtY2E0Yi00NDBlLWI0MWUtODY1ZjExMDAyOWZiXkEyXkFqcGc@._V1_SX300.jpg"
+                        class="rounded-box" />
+                    <div class="pl-1 text-lg text-white">Shoes</div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-@section('main')
-<section class="bg-white rounded-xl relative w-full self-center reveal">
-    <div class="flex flex-col py-20 gap-12">
-        <div class="badge bg-[#CFF245] place-self-center p-3">Watchlist</div>
-        <div class="w-3/4 place-self-center">
-            <h1 class="text-4xl text-center">Create your personalized movie watchlist to track and organize films you want to see, ensuring you never miss out on your favorites!</h1>
-        </div>
-        <div class="w-3/4 place-self-center flex flex-col gap-20">
-            <div class="mockup-window border bg-base-300">
-                <div class="flex justify-center bg-base-200">
-                    <img src="{{ asset('img/Screenshot 2024-06-11 201052.png') }}" alt="" class="h-full">
-                </div>
-            </div>
-            <div class="flex flex-row gap-8 justify-between">
-                <div class="card bg-base-100 shadow-xl">
-                    <div class="card-body">
-                        <h2 class="card-title">
-                        Wathclist Management
-                            <div class="badge badge-secondary">NEW</div>
-                        </h2>
-                        <p>Easily manage and organize your watchlist.</p>
-                        <div class="card-actions justify-end">
-                        <div class="badge badge-outline">Fashion</div> 
-                        <div class="badge badge-outline">Products</div>
-                        </div>
+
+
+    {{-- <div class="flex flex-row gap-8 justify-between w-full place-self-center max-h-[350px]">
+                <div class="card scale-75 bg-transparent shadow-xl">
+                    <figure>
+                        <img src="https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_SX300.jpg" alt="Shoes" />     
+                    </figure>
+                    <div class="card-body flex-col flex gap-2">
+                        <h2 class="card-title text-white">Shoes</h2>
                     </div>
-                    <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
                 </div>
-                <div class="card bg-base-100 shadow-xl">
-                    <figure><img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.jpg" alt="Shoes" /></figure>
-                    <div class="card-body">
-                        <h2 class="card-title">
-                        Detailed Movie Info
-                            <div class="badge badge-secondary">NEW</div>
-                        </h2>
-                        <p>Access comprehensive details about each movie.</p>
-                        <div class="card-actions justify-end">
-                        <div class="badge badge-outline">Fashion</div> 
-                        <div class="badge badge-outline">Products</div>
-                        </div>
+                <div class="card scale-75 bg-transparent shadow-xl">
+                    <figure>
+                        <img src="https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_SX300.jpg" alt="Shoes" />     
+                    </figure>
+                    <div class="card-body flex-col flex gap-2">
+                        <h2 class="card-title text-white">Shoes</h2>
+                    </div>
+                </div>
+                <div class="card scale-75 bg-transparent shadow-xl">
+                    <figure>
+                        <img src="https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_SX300.jpg" alt="Shoes" />     
+                    </figure>
+                    <div class="card-body flex-col flex gap-2">
+                        <h2 class="card-title text-white">Shoes</h2>
+                    </div>
+                </div>
+                <div class="card scale-75 bg-transparent shadow-xl">
+                    <figure>
+                        <img src="https://m.media-amazon.com/images/M/MV5BMzUzNDM2NzM2MV5BMl5BanBnXkFtZTgwNTM3NTg4OTE@._V1_SX300.jpg" alt="Shoes" />     
+                    </figure>
+                    <div class="card-body flex-col flex gap-6">
+                        <h2 class="card-title text-white">Shoes</h2>
                     </div>
                 </div>
             </div>
-            <h1 class="text-4xl text-center place-self-center">Choose your pricing plan!</h1>
-            <div class="card w-96 bg-[#0D0E11] shadow-xl place-self-center">
-                <div class="card-body flex-col flex gap-8">
-                    <div class="flex flex-col gap-2">
-                        <div class="flex flex-row gap-4">
-                            <h2 class="card-title line-through text-white">$34.99</h2>
-                            <div class="badge bg-[#CFF245] mt-1">Free</div>
-                        </div>
-                        <p class="text-xs text-[#868788]">Per user, per month, for now.</p>
-                    </div>
-                    <div class="flex flex-col gap-4 text-white">
-                        <p>Personalized movie recommendations</p>
-                        <p>Unlimited watchlist management</p>
-                        <p>Access to trending movies</p>
-                        <p>Detailed movie information</p>
-                        <p>Community reviews and ratings</p>
-                    </div >
-                    <div class="card-actions justify-end">
-                    <button class="btn bg-[#CFF245]">Get Started</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        {{-- @foreach ($films as $film)
-        <div class="card card-compact w-1/2 bg-base-100 shadow-xl self-center reveal px-4">
-            <a href="{{ route('showMovies', ['id' => $film->id]) }}">
-                <figure><img src="{{ $film->poster }}" alt="{{ $film->title }}" /></figure>
-            </a>
-            <div class="card-body justify-between">
-                <h2 class="card-title">{{ $film->title }}</h2>
-                <p class="text-sm">{{ $film->plot }}</p>
-                <div class="flex flex-row justify-between">
-                    <div class="flex content-center">
-                        <p class="text-sm text-center text-gray-600">Added by: {{ auth()->user()->name }}</p>
-                    </div>
-                    <div class="card-actions justify-end gap-12">
-                        <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] text-black font-bold py-2 px-4 rounded-xl">
-                            <a href="{{ route('showMovies', ['id' => $film->id]) }}">View</a>
-                        </button>
-                        <a href="{{ route('editMovie', ['id' => $film->id]) }}" class="btn btn-warning">Edit</a>
-                        @auth
-                        <form action="{{ route('deleteMovie', ['id' => $film->id]) }}" method="post">
-                            @csrf
-                            @method('delete')
-                            <button class="btn btn-error" type="submit">Delete</button>
-                        </form>
-                        @else
-                        <button class="btn btn-error">Delete</button>
-                        @endauth
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endforeach --}}
-    </div>
-</section>
-@endsection
+            </div> --}}

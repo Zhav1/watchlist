@@ -6,142 +6,223 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ $film->title }}</title>
+    <title>{{ $movie ? $movie['name'] : 'Movie Not Found' }}</title>
     <link rel="stylesheet" href={{ asset('css/styles.css') }}>
     <script src={{ asset('js/script.js') }}></script>
     @vite('resources/css/app.css')
 </head>
 
 <body class="w-screen h-screen">
+    @include('main.header')
     <section class="w-screen flex flex-col bg-[#0D0E11]">
-        <section class="bg-[#0D0E11] w-screen flex flex-col gap-16">
-            <section class="flex flex-col px-5 gap-12 text-white">
-                @include('main.header')
-                <div class="flex flex-col gap-8">
-                    <div class="badge bg-[#CFF245] self-center p-3">My Movie</div>
-                    <div class="text-7xl text-center">
-                        <h1>{{ $film->title }}</h1>
-                    </div>
+        <section class="bg-[#0D0E11] w-screen flex flex-col">
+            <div class="relative w-full aspect-video overflow-hidden rounded-lg">
+                @if (!empty($movie['trailer']))
+                    <iframe class="w-full h-full" src="{{ $movie['trailer'] }}" title="Sample Movie" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen>
+                    </iframe>
+                @else
+                    <video loop autoplay muted class="w-full h-full">
+                        <source src="{{ asset('img/video.mp4') }}" type="video/mp4">
+                    </video>
+                @endif
+                <div
+                    class="absolute inset-x-0 bottom-0 h-2/4 bg-gradient-to-t from-[#0D0E11] to-transparent flex items-center">
+                    <p class="text-white font-bold text-5xl absolute bottom-4 left-6">{{ $movie['name'] }}</p>
                 </div>
-            </section>
-            <section class="bg-white rounded-xl w-full relative h-max p-6 flex flex-col gap-10">
+            </div>
+            <section class="rounded-xl w-full relative h-max p-6 flex flex-col gap-2 place-content-center text-white">
                 <div class="flex flex-row gap-4">
                     <div class="flex w-full">
                         <div class="flex card rounded-box w-2/5 p-20 object-center">
-                            <img class="" src="{{ $film->poster }}" alt="Poster">
+                            <img class="" src="{{ $movie['image'] }}" alt="Poster">
                         </div>
                         <div class="divider divider-horizontal"></div>
                         <div class="flex card rounded-box w-3/5 place-self-center gap-8 grow">
                             <div class="flex-row flex gap-12 max-w-fit">
-                                <div class="stats stats-vertical flex flex-col">
+                                <div class="stats stats-vertical flex flex-col bg-transparent">
                                     <div class="stat gap-2">
-                                        <div class="stat-title">Language</div>
-                                        <div class="stat-value text-2xl text-pretty">{{ $film->language }}</div>
+                                        <div class="stat-title text-white">Year</div>
+                                        <div class="stat-value text-xl text-pretty text-[#9E9FA0]">
+                                            {{ $movie['datePublished'] }}</div>
                                         <div class="stat-desc"></div>
                                     </div>
                                     <div class="stat gap-2">
-                                        <div class="stat-title">Year</div>
-                                        <div class="stat-value text-2xl">{{ $film->year }}</div>
+                                        <div class="stat-title text-white">Languages</div>
+                                        <div class="stat-value text-xl text-[#9E9FA0]">
+                                            {{ $movie['language'] }}</div>
                                         <div class="stat-desc"></div>
                                     </div>
                                     <div class="stat gap-2">
-                                        <div class="stat-title">Runtime</div>
-                                        <div class="stat-value text-2xl">{{ $film->runtime }}</div>
+                                        <div class="stat-title text-white">Runtime</div>
+                                        <div class="stat-value text-xl text-[#9E9FA0] text-pretty">
+                                            {{ $movie['duration'] }}</div>
                                         <div class="stat-desc"></div>
+                                    </div>
+                                    <div class="stat gap-2">
+                                        <div class="stat-title text-white">Genre</div>
+                                        <div class="stat-value text-xl text-[#9E9FA0] text-pretty">
+                                            {{ implode(', ', $movie['genres']) }}</div>
+                                    </div>
+                                    <div class="stat gap-2">
+                                        <div class="stat-title text-white">Rating</div>
+                                        <div class="stat-value text-xl text-pretty text-[#9E9FA0]">
+                                            {{ $movie['rating'] }}</div>
+                                        <div class="stat-desc text-white">{{ $movie['voters'] }}</div>
                                     </div>
                                 </div>
-                                <div class="stats stats-vertical flex flex-col">
+                                <div class="stats stats-vertical flex flex-col bg-transparent">
                                     <div class="stat gap-2">
-                                        <div class="stat-title">Director</div>
-                                        <div class="stat-value text-2xl text-pretty">{{ $film->director }}</div>
-                                        <div class="stat-desc"></div>
-                                    </div>
-                                    <div class="stat gap-2">
-                                        <div class="stat-title">Writer</div>
-                                        <div class="stat-value text-2xl text-pretty">{{ $film->writer }}</div>
-                                        <div class="stat-desc"></div>
-                                    </div>
-                                    <div class="stat gap-2">
-                                        <div class="stat-title">Country</div>
-                                        <div class="stat-value text-2xl text-pretty">{{ $film->country }}</div>
-                                        <div class="stat-desc"></div>
+                                        <div class="stat-title text-white">Director</div>
+                                        <div class="stat-value text-xl text-pretty text-[#9E9FA0]">
+                                            @if (!empty($movie['directors']))
+                                                @foreach ($movie['directors'] as $director)
+                                                    @if (!empty($director['uri']))
+                                                        <a href="{{ route('showperson', ['id' => $director['uri']]) }}"
+                                                            target="_blank"
+                                                            class="text-[#CFF245]">{{ $director['name'] }}</a>
+                                                    @else
+                                                        {{ $director }}
+                                                    @endif
+                                                    @if (!$loop->last)
+                                                        ,
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                No directors found.
+                                            @endif
+                                            <div class="stat-desc"></div>
+                                        </div>
+                                        <div class="stat gap-2">
+                                            <div class="stat-title text-white">Writer</div>
+                                            <div class="stat-value text-xl text-pretty text-[#9E9FA0]">
+                                                @if (!empty($movie['writers']))
+                                                    @foreach ($movie['writers'] as $writer)
+                                                        @if (!empty($writer['uri']))
+                                                            <a href="{{ route('showperson', ['id' => $writer['uri']]) }}"
+                                                                target="_blank"
+                                                                class="text-[#CFF245]">{{ $writer['name'] }}</a>
+                                                        @else
+                                                            {{ $writer }}
+                                                        @endif
+                                                        @if (!$loop->last)
+                                                            ,
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    No writers found.
+                                                @endif
+                                                <div class="stat-desc"></div>
+                                            </div>
+                                            <div class="stat gap-2">
+                                                <div class="stat-title text-white">Country</div>
+                                                <div class="stat-value text-xl text-pretty text-[#9E9FA0]">
+                                                    {{ $movie['country'] }} </div>
+                                                <div class="stat-desc"></div>
+                                            </div>
+                                            <div class="stat gap-2">
+                                                <div class="stat-title text-white">Awards</div>
+                                                <div class="stat-value text-xl text-[#9E9FA0] text-pretty">
+                                                    {{ $movie['award'] }}
+                                                </div>
+                                            </div>
+                                            <div class="stat gap-2">
+                                                <div class="stat-title text-white">Actor</div>
+                                                <div class="stat-value text-xl text-[#9E9FA0] text-pretty">
+                                                    @if (!empty($movie['actors']))
+                                                        @foreach ($movie['actors'] as $actor)
+                                                            @if (!empty($actor['uri']))
+                                                                <a href="{{ route('showperson', ['id' => $actor['uri']]) }}"
+                                                                    target="_blank"
+                                                                    class="text-[#CFF245]">{{ $actor['name'] }}</a>
+                                                            @else
+                                                                {{ $actor }}
+                                                            @endif
+                                                            @if (!$loop->last)
+                                                                ,
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        No actors found.
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="stats stats-vertical max-w-fit place-items-center">
-                                <div class="stat gap-2">
-                                    <div class="stat-title">Genre</div>
-                                    <div class="stat-value text-2xl">{{ $film->genre }}</div>
+                        </div>
+                        <div class="stats stats-vertical max-w-fit bg-transparent">
+                            <div class="stat gap-2">
+                                <div class="stat-title text-white">Plot</div>
+                                <div class="text-lg text-pretty text-[#9E9FA0]">{{ $movie['description'] }}
                                 </div>
                             </div>
-                            <div class="stats stats-vertical max-w-fit">
-                                <div class="stat gap-2">
-                                    <div class="stat-title">Plot</div>
-                                    <div class="text-lg text-pretty ">{{ $film->plot }}</div>
-                                </div>
-                            </div>
-                            
                         </div>
                     </div>
                 </div>
-                <!-- Form for Adding Comments -->
-                <div class="w-3/6 self-center">
-                    <form action="{{ route('addComment') }}" method="POST" class="bg-white p-6 rounded-lg">
-                        @csrf
-                        <input type="hidden" name="movie_id" value="{{ $film->id }}">
-                        <div class="form-control w-full">
-                            <div class="label">
-                                <span class="label-text">What's on your mind?</span>
-                            </div>
-                            <div class="flex relative join">
-                                <input name="comment" type="text" placeholder="Add Comment"
-                                    class="input input-bordered w-full join-item" autocomplete="off" />
-                                @auth
-                                    <button type="submit"
-                                        class="btn bg-[#CFF245] hover:bg-[#AAC73C] join-item">Send</button>
-                                @else
-                                    <button class="btn bg-[#CFF245] hover:bg-[#AAC73C] join-item"><a
-                                            href="/login">Send</a></button>
-                                @endauth
-                            </div>
-                            @error('comment')
-                                <span class="text-red-600">{{ $message }}</span>
-                            @enderror
+                </div>
+                </div>
+                <div class="flex flex-col pt-10 gap-8">
+                    <div class="place-self-start flex flex-col gap-2 grow w-full">
+                        <div class="text-[#CFF245] text-[28px]">Movies Like This</div>
+                        <h1 class="text-base text-[#9E9FA0]">Find films similar to what you're looking right now.
+                        </h1>
+                    </div>
+                    <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
                         </div>
-                    </form>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                        <div class="carousel-item flex flex-col gap-2">
+                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
+                                class="rounded-box" />
+                            <div class="pl-1 text-lg text-white">Shoes</div>
+                        </div>
+                    </div>
                 </div>
-
-                <!-- Display Comments and footer-->
-                <div class="w-4/6 space-y-6 self-center">
-                    @if ($film->comments)
-                        @foreach ($film->comments as $comment)
-                            <div class="bg-white p-6 rounded-lg shadow-md">
-                                <div class="flex flex-col items-start">
-                                    <div class="">{{ $comment->user->name }}</div>
-                                    <div class="chat chat-start p-4">
-                                        <div class="bg-[#CFF245] text-black text-pretty break-words p-2 py-3 rounded-xl w-fit">
-                                            {{ $comment->comment }}</div>
-                                        </div>
-                                    <div class="flex justify-between items-center mt-4 w-full">
-                                        <p class="text-gray-500 text-sm">{{ $comment->tanggal }}</p>
-                                        @auth
-                                        <form action="{{ route('deleteComment', ['id' => $comment->comment_id]) }}" method="POST">
-                                            @csrf
-                                            @method('delete')
-                                            <button class="btn btn-error btn-sm" type="submit">Delete</button>
-                                        </form>
-                                        @endauth
-                                    </div>
-                                </div>
-                            </div>
-                        @endforeach
-                    @else
-                        <p class="text-gray-500">No comments yet.</p>
-                    @endif
-                </div>
-                <a href="{{ route('movies.index') }}" class="place-self-center">
-                    <button class="btn btn-warning w-48">Back?</button>
-                </a>
             </section>
         </section>
         @include('main.footer')

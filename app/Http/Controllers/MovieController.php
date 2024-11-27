@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Movie;
 use App\Models\Watchlist;
 use Illuminate\Http\Request;
+use EasyRdf\Graph;
+use EasyRdf\Sparql\Client;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 
@@ -12,173 +14,541 @@ class MovieController extends Controller
 {
     public function index()
     {
-        return view('main.home');
-    }
-    public function indexWatchlist(Request $request)
-{
-    $userId = Auth::id();
-    
-    $sortGenre = $request->input('sort_genre');
-    $sortCountry = $request->input('sort_country');
-    $sortLanguage = $request->input('sort_language');
+        $sparql = new Client('http://localhost:3030/movies/sparql');
 
-    $watchlists = Watchlist::where('user_id', $userId)->with('movie')->get();
-    $movies = $watchlists->map(function ($watchlist) {
-        return $watchlist->movie;
-    });
+        $queries = [
+            'topRated' => "
+                PREFIX film: <http://example.org/movie#>
+                SELECT ?movie ?name ?image ?rating ?id
+                WHERE {
+                    ?movie a film:Movie ;
+                        film:name ?name ;
+                        film:rating ?rating ;
+                        film:id ?id ;
+                        film:image ?image .
+                        FILTER(?rating != 'N/A')
+                }
+                ORDER BY DESC(?rating)
+                LIMIT 10
+            ",
+            'action' => "
+                PREFIX film: <http://example.org/movie#>
+                SELECT ?movie ?name ?image ?rating ?id
+                WHERE {
+                    ?movie a film:Movie ;
+                        film:name ?name ;
+                        film:rating ?rating ;
+                        film:image ?image ;
+                        film:id ?id ;
+                        film:genre 'Action' .
+                        FILTER(?rating != 'N/A')
+                }
+                ORDER BY DESC(?rating)
+                LIMIT 10
+            ",
+            'romance' => "
+                PREFIX film: <http://example.org/movie#>
+                SELECT ?movie ?name ?image ?rating ?id
+                WHERE {
+                    ?movie a film:Movie ;
+                        film:name ?name ;
+                        film:rating ?rating ;
+                        film:image ?image ;
+                        film:id ?id ;
+                        film:genre 'Romance' .
+                        FILTER(?rating != 'N/A')
+                }
+                ORDER BY DESC(?rating)
+                LIMIT 10
+            ",
+            'drama' => "
+                PREFIX film: <http://example.org/movie#>
+                SELECT ?movie ?name ?image ?rating ?id
+                WHERE {
+                    ?movie a film:Movie ;
+                        film:name ?name ;
+                        film:rating ?rating ;
+                        film:image ?image ;
+                        film:id ?id ;
+                        film:genre 'Drama' .
+                        FILTER(?rating != 'N/A')
+                }
+                ORDER BY DESC(?rating)
+                LIMIT 10
+            ",
+        ];
 
-    if ($sortGenre) {
-        $movies = $movies->filter(function ($movie) use ($sortGenre) {
-            return stripos($movie->genre, $sortGenre) !== false;
-        });
-    }
+        $results = [];
 
-    if ($sortCountry) {
-        $movies = $movies->filter(function ($movie) use ($sortCountry) {
-            return stripos($movie->country, $sortCountry) !== false;
-        });
-    }
+        // Execute all queries and collect results
+        foreach ($queries as $key => $query) {
+            $sparqlResult = $sparql->query($query);
 
-    if ($sortLanguage) {
-        $movies = $movies->filter(function ($movie) use ($sortLanguage) {
-            return stripos($movie->language, $sortLanguage) !== false;
-        });
-    }
-    return view('watchlist', compact('movies', 'sortGenre', 'sortCountry', 'sortLanguage'));
-}
-    public function search(Request $request)
-    {
-        $request->validate([
-            'movie_name' => 'required|string|max:255',
-        ]);
-
-        $movieName = $request->input('movie_name');
-        $apiKey = env('OMDB_API_KEY');
-        $response = Http::get("http://www.omdbapi.com/?s={$movieName}&apikey={$apiKey}");
-
-        if ($response->failed()) {
-        return redirect()->back()->withErrors(['There was an error with the OMDB API request.']);
-        }
-
-        if ($response->successful() && isset($response['Search'])) {
-            $movies = $response->json()['Search'];
-            return view('result', ['movies' => $movies, 'search' => $movieName]);
-        } else {
-            return redirect()->back()->withErrors(['Film tidak ditemukan']);
-        }
-    }
-
-    public function create(Request $request)
-    {
-        $imdbID = $request->input('imdbID');
-        $movie = Movie::where('imdbID', $imdbID)->first();
-        if ($movie) {
-            Watchlist::firstOrCreate([
-                'user_id' => Auth::id(),
-                'movie_id' => $movie->id,
-            ]);
-            return redirect('/watchlists')->with('success', 'Film sudah ada di watchlist Anda');
-        } 
-        else {    
-            $apiKey = env('OMDB_API_KEY');
-            $response = Http::get("http://www.omdbapi.com/?i={$imdbID}&apikey={$apiKey}");
-
-            if ($response->successful() && $response['Response'] === 'True') {
-                $movieInfo = $response->json();
-
-                // Create a new movie entry in the database
-                $movie = Movie::create([
-                    'imdbID' => $movieInfo['imdbID'],
-                    'title' => $movieInfo['Title'],
-                    'plot' => $movieInfo['Plot'],
-                    'poster' => $movieInfo['Poster'],
-                    'genre' => $movieInfo['Genre'],
-                    'year' => $movieInfo['Year'],
-                    'runtime' => $movieInfo['Runtime'],
-                    'director' => $movieInfo['Director'],
-                    'writer' => $movieInfo['Writer'],
-                    'country' => $movieInfo['Country'],
-                    'language' => $movieInfo['Language'],
-                ]);
-
-                // Add the movie to the user's watchlist
-                Watchlist::create([
-                    'user_id' => Auth::id(),
-                    'movie_id' => $movie->id,
-                ]);
-
-                return redirect('/watchlists')->with('success', 'Film berhasil ditambahkan ke watchlist');
-            } else {
-                return redirect('/')->withErrors(['Film tidak ditemukan']);
+            $movies = [];
+            foreach ($sparqlResult as $row) {
+                $movies[] = [
+                    'movie' => (string) $row->movie,
+                    'name' => (string) $row->name,
+                    'image' => (string) $row->image,
+                    'rating' => (float) (string) $row->rating,
+                    'id' => (string) $row->id,
+                ];
             }
-        }
-    }
-
-    public function editMovie(Request $request)
-    {
-        $film = Movie::find($request->id);
-        return view('edit', ['film' => $film]);
-    }
-
-    public function updateMovie(Request $request)
-    {
-        $request->validate([
-            'id' => 'required|integer|exists:movies,id',
-            'title' => 'required|string|max:255',
-            'language' => 'required|string|max:255',
-            'year' => 'required|string|max:4',
-            'runtime' => 'required|string|max:255',
-            'director' => 'required|string|max:255',
-            'writer' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'genre' => 'required|string|max:255',
-            'plot' => 'required|string',
-        ]);
-
-        $film = Movie::find($request->id);
-        if (!$film) {
-            return redirect()->back()->withErrors(['Film tidak ditemukan']);
+            $results[$key] = $movies;
         }
 
-        $film->update([
-            'title' => $request->title,
-            'language' => $request->language,
-            'year' => $request->year,
-            'runtime' => $request->runtime,
-            'director' => $request->director,
-            'writer' => $request->writer,
-            'country' => $request->country,
-            'genre' => $request->genre,
-            'plot' => $request->plot,
+        // Pass results to the view
+        return view('main.layout', [
+            'topRatedMovies' => $results['topRated'],
+            'actionMovies' => $results['action'],
+            'romanceMovies' => $results['romance'],
+            'dramaMovies' => $results['drama'],
         ]);
-
-        return view('show', compact('film'));
-    }
-    public function deleteMovie(Request $request)
-    {
-        Movie::where('id', $request->id)->delete();
-        return redirect('/movie');
     }
 
     public function show($id)
     {
-        $film = Movie::find($id);
-        if (!$film) {
-            return redirect('/')->with('error', 'Movie not found');
+        $sparql = new Client('http://localhost:3030/movies/sparql'); // URL Fuseki SPARQL endpoint
+
+        $query = "
+        PREFIX ns1: <http://example.org/movie#>
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+        SELECT ?movie ?name ?datePublished ?rating ?voters ?description ?award ?image ?language ?country ?trailer ?duration
+        (GROUP_CONCAT(DISTINCT ?genre; separator=\", \") AS ?genres)
+        (GROUP_CONCAT(DISTINCT ?actorUri; separator=\", \") AS ?actors)
+        (GROUP_CONCAT(DISTINCT ?writerUri; separator=\", \") AS ?writers)
+        (GROUP_CONCAT(DISTINCT ?directorUri; separator=\", \") AS ?directors)
+        WHERE {
+        ?movie rdf:type ns1:Movie ;
+            ns1:id '$id' ;
+            ns1:name ?name ;
+            ns1:datePublished ?datePublished ;
+            ns1:rating ?rating ;
+            ns1:voters ?voters ;
+            ns1:description ?description ;
+            ns1:award ?award ;
+            ns1:image ?image ;
+            ns1:language ?language ;
+            ns1:country ?country ;
+            ns1:trailer ?trailer ;
+            ns1:duration ?duration ;
+            ns1:hasActor ?actorUri ;
+            ns1:hasWriter ?writerUri ;
+            ns1:director ?directorUri .
+        OPTIONAL { ?movie ns1:genre ?genre . }
+        }
+        GROUP BY ?movie ?name ?datePublished ?rating ?voters ?description ?award ?image ?language ?country ?trailer ?duration
+        ";
+        try {
+            $sparqlResult = $sparql->query($query);
+        } catch (\Exception $e) {
+            return response()->view('errors.query_error', ['error' => $e->getMessage()]);
         }
 
-        return view('show', compact('film'));
+        $movie = null;
+        $actorNames = [];
+        $directorNames = [];
+        $writerNames = [];
+
+        foreach ($sparqlResult as $row) {
+            $movie = [
+                'name' => $this->validateString($row->name->getValue() ?? null, 'N/A'),
+                'image' => $this->validateString($row->image instanceof \EasyRdf\Resource ? $row->image->getUri() : $row->image->getValue(), 'N/A'),
+                'rating' => $this->validateFloat($row->rating->getValue() ?? null, 0.0),
+                'description' => $this->validateString($row->description->getValue() ?? null, 'No description available.'),
+                'trailer' => $this->validateString($row->trailer instanceof \EasyRdf\Resource ? $row->trailer->getUri() : $row->trailer->getValue(), ''),
+                'datePublished' => $this->validateString($row->datePublished->getValue() ?? null, 'Unknown'),
+                'voters' => $this->validateInt($row->voters->getValue() ?? null, 0),
+                'award' => $this->validateString($row->award->getValue() ?? null, 'No awards.'),
+                'id' => $id,
+                'genres' => isset($row->genres) ? $this->validateArray(explode(', ', $row->genres->getValue()), []) : [],
+                'language' => $this->validateString($row->language->getValue() ?? null, 'Unknown'),
+                'country' => $this->validateString($row->country->getValue() ?? null, 'Unknown'),
+                'writers' => isset($row->writers) ? $this->validateArray(explode(', ', $row->writers->getValue()), []) : [],
+                'directors' => isset($row->directors) ? $this->validateArray(explode(', ', $row->directors->getValue()), []) : [],
+                'actors' => isset($row->actors) ? $this->validateArray(explode(', ', $row->actors->getValue()), []) : [],
+                'duration' => $this->validateString($row->duration->getValue() ?? null, 'Unknown duration'),
+            ];
+
+            // Proses Writers
+            if (isset($row->writers)) {
+                $writers = explode(', ', (string) $row->writers);
+                foreach ($writers as $writerUri) {
+                    if (strpos($writerUri, 'wikidata.org') !== false) {
+                        // Query Wikidata untuk nama penulis
+                        $wikidataQuery = "
+                    PREFIX wd: <http://www.wikidata.org/entity/>
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                    SELECT ?writerName
+                    WHERE {
+                        <{$writerUri}> rdfs:label ?writerName .
+                        FILTER(LANG(?writerName) = 'en')
+                    }";
+
+                        $writerId = $this->extractIdFromUri($writerUri);
+                        $wikidataClient = new Client('https://query.wikidata.org/sparql');
+                        try {
+                            $wikidataResult = $wikidataClient->query($wikidataQuery);
+                            foreach ($wikidataResult as $writerRow) {
+                                $writerNames[] = [
+                                    'name' => $this->validateString((string) $writerRow->writerName, 'Unknown Writer'),
+                                    'uri' => $writerId
+                                ];
+                            }
+                        } catch (\Exception $e) {
+                            $writerNames[] = 'Unknown Writer';
+                        }
+                    } else {
+                        // Query Fuseki untuk URI penulis yang bukan Wikidata
+                        $fusekiQuery = "
+                    PREFIX film: <http://example.org/movie#>
+
+                    SELECT ?writerName
+                    WHERE {
+                        <{$writerUri}> film:name ?writerName .
+                    }";
+
+                        try {
+                            $fusekiResult = $sparql->query($fusekiQuery);
+                            foreach ($fusekiResult as $writerRow) {
+                                $writerNames[] = $this->validateString((string) $writerRow->writerName, 'Unknown Writer');
+                            }
+                        } catch (\Exception $e) {
+                            $writerNames[] = ['name' => 'Unknown Actor', 'uri' => ''];
+                        }
+                    }
+                }
+            }
+
+            // Proses Directors
+            if (isset($row->directors)) {
+                $directors = explode(', ', (string) $row->directors);
+                foreach ($directors as $directorUri) {
+                    if (strpos($directorUri, 'wikidata.org') !== false) {
+                        // Query Wikidata untuk nama sutradara
+                        $wikidataQuery = "
+                    PREFIX wd: <http://www.wikidata.org/entity/>
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                    SELECT ?directorName
+                    WHERE {
+                        <{$directorUri}> rdfs:label ?directorName .
+                        FILTER(LANG(?directorName) = 'en')
+                    }";
+
+                        $directorId = $this->extractIdFromUri($directorUri);
+                        $wikidataClient = new Client('https://query.wikidata.org/sparql');
+                        try {
+                            $wikidataResult = $wikidataClient->query($wikidataQuery);
+                            foreach ($wikidataResult as $directorRow) {
+                                $directorNames[] = [
+                                    'name' => $this->validateString((string) $directorRow->directorName, 'Unknown Director'),
+                                    'uri' => $directorId
+                                ];
+                            }
+                        } catch (\Exception $e) {
+                            $directorNames[] = ['name' => 'Unknown Actor', 'uri' => ''];
+                        }
+                    } else {
+                        // Query Fuseki untuk URI sutradara yang bukan Wikidata
+                        $fusekiQuery = "
+                    PREFIX film: <http://example.org/movie#>
+
+                    SELECT ?directorName
+                    WHERE {
+                        <{$directorUri}> film:name ?directorName .
+                    }";
+
+                        try {
+                            $fusekiResult = $sparql->query($fusekiQuery);
+                            foreach ($fusekiResult as $directorRow) {
+                                $directorNames[] = $this->validateString((string) $directorRow->directorName, 'Unknown Director');
+                            }
+                        } catch (\Exception $e) {
+                            $directorNames[] = 'Unknown Director';
+                        }
+                    }
+                }
+            }
+
+            // Proses Actors
+            if (isset($row->actors)) {
+                $actors = explode(', ', (string) $row->actors);
+                foreach ($actors as $actorUri) {
+                    if (strpos($actorUri, 'wikidata.org') !== false) {
+                        // Query Wikidata untuk nama aktor
+                        $wikidataQuery = "
+                    PREFIX wd: <http://www.wikidata.org/entity/>
+                    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+                    SELECT ?actorName
+                    WHERE {
+                        <{$actorUri}> rdfs:label ?actorName .
+                        FILTER(LANG(?actorName) = 'en')
+                    }";
+                        $actorId = $this->extractIdFromUri($actorUri);
+                        $wikidataClient = new Client('https://query.wikidata.org/sparql');
+                        try {
+                            $wikidataResult = $wikidataClient->query($wikidataQuery);
+                            foreach ($wikidataResult as $actorRow) {
+                                $actorNames[] = [
+                                    'name' => $this->validateString((string) $actorRow->actorName, 'Unknown Actor'),
+                                    'uri' => $actorId // Store the URI of the actor
+                                ];
+                            }
+                        } catch (\Exception $e) {
+                            $actorNames[] = ['name' => 'Unknown Actor', 'uri' => ''];
+                        }
+                    } else {
+                        // Query Fuseki untuk URI aktor yang bukan Wikidata
+                        $fusekiQuery = "
+                    PREFIX film: <http://example.org/movie#>
+
+                    SELECT ?actorName
+                    WHERE {
+                        <{$actorUri}> film:name ?actorName .
+                    }";
+
+                        try {
+                            $fusekiResult = $sparql->query($fusekiQuery);
+                            foreach ($fusekiResult as $actorRow) {
+                                $actorNames[] = $this->validateString((string) $actorRow->actorName, 'Unknown Actor');
+                            }
+                        } catch (\Exception $e) {
+                            $actorNames[] = 'Unknown Actor';
+                        }
+                    }
+                }
+            }
+
+            // Remove duplicates based on URI for actors
+            $movie['actors'] = array_values(array_unique($actorNames, SORT_REGULAR));
+
+            // Remove duplicates for directors and writers in the same way
+            $movie['directors'] = array_values(array_unique($directorNames, SORT_REGULAR));
+            $movie['writers'] = array_values(array_unique($writerNames, SORT_REGULAR));
+        }
+
+        if ($movie === null) {
+            return response()->view('errors.no_movie_found', ['id' => $id]);
+        }
+
+        return view('show', compact('movie'));
     }
 
-    public function deletewatchlist($id)
+    private function extractIdFromUri($uri)
+{
+    // Memisahkan URI untuk mengambil ID terakhir
+    $parsedUri = parse_url($uri);
+    $path = $parsedUri['path'] ?? '';
+    return basename($path); // Mengambil bagian terakhir setelah '/'
+}
+
+    public function getPersonDetails($id)
     {
-        // Assuming Watchlist has user_id and movie_id columns
-        $watchlistItem = Watchlist::where('user_id', auth()->id())->where('movie_id', $id)->first();
+        // SPARQL Query untuk mengambil data berdasarkan ID
+        $sparqlQuery = "
+        PREFIX wd: <http://www.wikidata.org/entity/>
+        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+        PREFIX schema: <http://schema.org/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 
-        if ($watchlistItem) {
-            $watchlistItem->delete();
+        SELECT ?image ?name ?birthPlace ?birthDate ?deathDate ?occupationLabel ?countryLabel ?awardLabel ?description WHERE {
+            BIND(wd:$id AS ?person)
+            OPTIONAL { ?person wdt:P18 ?image. }
+            OPTIONAL { ?person rdfs:label ?name. FILTER(LANG(?name) = 'en') }
+            OPTIONAL { ?person wdt:P19 ?birthPlaceUri. ?birthPlaceUri rdfs:label ?birthPlace. FILTER(LANG(?birthPlace) = 'en') }
+            OPTIONAL { ?person wdt:P569 ?birthDate. }
+            OPTIONAL { ?person wdt:P570 ?deathDate. }
+            OPTIONAL { ?person wdt:P106 ?occupationUri. ?occupationUri rdfs:label ?occupationLabel. FILTER(LANG(?occupationLabel) = 'en') }
+            OPTIONAL { ?person wdt:P27 ?countryUri. ?countryUri rdfs:label ?countryLabel. FILTER(LANG(?countryLabel) = 'en') }
+            OPTIONAL { ?person wdt:P166 ?awardUri. ?awardUri rdfs:label ?awardLabel. FILTER(LANG(?awardLabel) = 'en') }
+            OPTIONAL { ?person schema:description ?description. FILTER(LANG(?description) = 'en') }
         }
+        LIMIT 1
+        ";
 
-        return redirect()->back()->with('status', 'Movie removed from your watchlist!');
+        // Client HTTP untuk SPARQL Endpoint
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => 'https://query.wikidata.org/sparql',
+            'timeout' => 10.0,
+        ]);
+
+        try {
+            // Melakukan request ke SPARQL endpoint
+            $response = $client->get('', [
+                'query' => ['query' => $sparqlQuery, 'format' => 'json'],
+            ]);
+
+            $results = json_decode($response->getBody(), true)['results']['bindings'];
+
+            if (!empty($results)) {
+                $data = $results[0];
+
+                // Format Data untuk View
+                $personDetails = [
+                    'image' => $data['image']['value'] ?? null,
+                    'nama' => $data['name']['value'] ?? 'Unknown',
+                    'tempatlahir' => $data['birthPlace']['value'] ?? 'Unknown',
+                    'tanggallahir' => $data['birthDate']['value'] ?? 'Unknown',
+                    'tanggalwafat' => $data['deathDate']['value'] ?? 'Unknown',
+                    'pekerjaan' => $data['occupationLabel']['value'] ?? 'Unknown',
+                    'country' => $data['countryLabel']['value'] ?? 'Unknown',
+                    'award' => $data['awardLabel']['value'] ?? 'None',
+                    'description' => $data['description']['value'] ?? 'No description available',
+                ];
+
+                return view('wikishow', compact('personDetails'));
+            }
+
+            return view('wikishow', [
+                'personDetails' => null,
+                'error' => 'No data found for the given ID.'
+            ]);
+        } catch (\Exception $e) {
+            return view('wikishow', [
+                'personDetails' => null,
+                'error' => 'Error fetching data: ' . $e->getMessage()
+            ]);
+        }
+    }
+
+
+
+    private function validateString($value, $default)
+    {
+        return is_string($value) ? $value : $default;
+    }
+
+    private function validateFloat($value, $default)
+    {
+        return is_numeric($value) ? (float)$value : $default;
+    }
+
+    private function validateInt($value, $default)
+    {
+        return is_numeric($value) ? (int)$value : $default;
+    }
+
+    private function validateArray($value, $default)
+    {
+        return is_array($value) ? $value : $default;
+    }
+
+    public function search(Request $request)
+    {
+        // Validasi input
+        $request->validate([
+            'keywords' => 'required|string|max:255',
+            'page' => 'nullable|integer|min:1', // Parameter opsional untuk halaman
+        ]);
+
+        // Ambil input keywords dan halaman (default ke 1 jika tidak ada)
+        $keywords = htmlspecialchars($request->input('keywords'), ENT_QUOTES);
+        $page = $request->input('page', 1); // Halaman default adalah 1
+        $limit = 10; // Jumlah hasil per halaman
+        $offset = ($page - 1) * $limit; // Hitung offset berdasarkan halaman yang dipilih
+
+        // Client untuk menghubungi endpoint SPARQL
+        $sparql = new Client('http://localhost:3030/movies/sparql');
+        $query = "
+        PREFIX film: <http://example.org/movie#>
+        SELECT DISTINCT ?id ?name ?datePublished ?rating ?voters ?description ?thumbnail ?genre
+        WHERE {
+            ?movie a film:Movie;
+                film:id ?id;
+                film:name ?name;
+                film:datePublished ?datePublished;
+                film:rating ?rating;
+                film:voters ?voters;
+                film:description ?description;
+                film:image ?thumbnail;
+                film:genre ?genre.
+
+            FILTER (
+                REGEX(?name, \"$keywords\", 'i') ||
+                REGEX(?description, \"$keywords\", 'i') ||
+                REGEX(?genre, \"$keywords\", 'i') ||
+                REGEX(?datePublished, \"$keywords\", 'i')
+            )
+        }
+        ORDER BY ?name
+        LIMIT $limit OFFSET $offset
+        ";
+
+        try {
+            // Eksekusi query SPARQL
+            $sparqlResult = $sparql->query($query);
+            $results = [];
+
+            // Pastikan hasil query tidak kosong
+            if (!empty($sparqlResult)) {
+                foreach ($sparqlResult as $row) {
+                    $id = $row->id->getValue();
+                    $name = $row->name->getValue();
+                    $datePublished = $row->datePublished->getValue();
+
+                    // Cek apakah thumbnail adalah objek EasyRdf\Resource
+                    if ($row->thumbnail instanceof \EasyRdf\Resource) {
+                        $thumbnail = $row->thumbnail->getUri();
+                    } else {
+                        $thumbnail = isset($row->thumbnail) ? $row->thumbnail->getValue() : 'N/A';
+                    }
+
+                    // Menghindari duplikasi berdasarkan ID
+                    if (!isset($results[$id])) {
+                        $results[$id] = [
+                            'id' => $id,
+                            'name' => $name,
+                            'thumbnail' => $thumbnail,
+                            'datePublished' => $datePublished,
+                        ];
+                    }
+                }
+            } else {
+                return back()->with('error', 'No results found for your search.');
+            }
+
+            // Query untuk menghitung total hasil pencarian
+            $totalResultsQuery = "
+            PREFIX film: <http://example.org/movie#>
+            SELECT (COUNT(DISTINCT ?id) AS ?total)
+            WHERE {
+                ?movie a film:Movie;
+                    film:id ?id;
+                    film:name ?name;
+                    film:datePublished ?datePublished;
+                    film:rating ?rating;
+                    film:voters ?voters;
+                    film:description ?description;
+                    film:image ?thumbnail;
+                    film:genre ?genre.
+
+                FILTER (
+                    REGEX(?name, \"$keywords\", 'i') ||
+                    REGEX(?description, \"$keywords\", 'i') ||
+                    REGEX(?genre, \"$keywords\", 'i') ||
+                    REGEX(?datePublished, \"$keywords\", 'i')
+                )
+            }
+        ";
+
+            // Eksekusi query untuk menghitung total hasil pencarian
+            $totalResults = $sparql->query($totalResultsQuery);
+            $total = $totalResults[0]->total->getValue(); // Ambil total hasil
+
+            // Hitung jumlah total halaman
+            $totalPages = ceil($total / $limit);
+
+            return view('result', [
+                'results' => $results,
+                'currentPage' => $page,
+                'totalPages' => $totalPages,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', 'An error occurred while processing your search.');
+        }
     }
 }

@@ -19,7 +19,8 @@ Route::delete('/delete/{id}', [MovieController::class, 'deleteMovie'])->name('de
 Route::delete('/watchlist/remove/{id}', [MovieController::class, 'deletewatchlist'])->name('watchlist.remove')->middleware('auth');
 
 // Search route
-Route::get('/search', [MovieController::class, 'search'])->name('movies.search')->middleware('auth');
+// Route::get('/search', [MovieController::class, 'search'])->name('movies.search')->middleware('auth');
+Route::get('/search', [MovieController::class, 'search'])->name('movies.search');
 
 // Authentication routes
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -31,9 +32,12 @@ Route::get('/register', [RegisterController::class, 'index'])->middleware('guest
 Route::post('/register', [RegisterController::class, 'store']);
 
 // Movie specific routes
-Route::get('/movies/{id}', [MovieController::class, 'show'])->name('showMovies'); 
+Route::get('/movies/{id}', [MovieController::class, 'show'])->name('showMovies');
 Route::get('/editMovie/{id}', [MovieController::class, 'editMovie'])->name('editMovie')->middleware('auth');
 Route::put('/updateMovie', [MovieController::class, 'updateMovie'])->name('updateMovie')->middleware('auth');
+
+//Wiki Data Routes
+Route::get('/person/{id}', [MovieController::class, 'getPersonDetails'])->name('showperson');
 
 // Comment routes
 Route::post('/addComment', [CommentController::class, 'addComment'])->name('addComment')->middleware('auth');

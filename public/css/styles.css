@@ -24,4 +24,33 @@
     transform: translateY(0);
     opacity: 1;
 }
+* Inner Light Ball */
+.light-ball-inner {
+    -webkit-filter: blur(49px);
+    filter: blur(49px);
+    background-color: #ffffff; /* White center color */
+    border-radius: 50%; /* Make it circular */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 155px; /* Height of the inner ball */
+    width: 430px; /* Width of the inner ball */
+    position: relative;
+    z-index: 2; /* Ensure it is above the outer ball */
+}
+
+/* Outer Light Ball */
+.light-ball-outer {
+    -webkit-filter: blur(60px);
+    filter: blur(60px);
+    background-color: #CFF245; /* Main color for the outer ball */
+    border-radius: 50%; /* Make it circular */
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Center it horizontally */
+    height: 700px; /* Height of the outer ball */
+    width: 700px; /* Width of the outer ball */
+    z-index: 0; /* Ensure it is below the inner ball */
+}
 

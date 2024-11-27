@@ -20,6 +20,8 @@ class RegisterController extends Controller
             'password' => 'required|min:5|max:255'
         ]);
 
+        $ValidateData['role'] = 'user';
+
         User::create($ValidateData);
 
         // $request->session()->flash('success','Registration successfull!');

@@ -12,12 +12,12 @@
 </head>
 
 <body class="bg-[#0D0E11] overflow-x-auto flex flex-col w-screen">
-  <section class="flex flex-col gap-8">
-    <section class="flex flex-col gap-20 text-white">
+  <section class="flex flex-col">
+    <section class="flex flex-col text-white">
       @include('main.header')
       @include('main.hero')
     </section>
-    @yield('main')
+    @include('main.home')
     @include('main.footer')
   </section>
 </body>

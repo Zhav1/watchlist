@@ -45,9 +45,7 @@
                                 <td>{{ $item->writer }}</td>
                                 <td>{{ $item->country }}</td>
                                 <td>{{ $item->language }}</td>
-                                <td><a href="{{ route('editMovie', ['id' => $item->id]) }}"
-                                        class="btn btn-warning">Edit
-                                    </a>
+                                <td>
                                      <form action="{{ route('deleteMovie', ['id' => $item->id]) }}" method="post">
                                         @csrf
                                         @method('delete')
