@@ -335,16 +335,72 @@ class MovieController extends Controller
             return response()->view('errors.no_movie_found', ['id' => $id]);
         }
 
+
+        // Ambil daftar genre film yang sedang ditampilkan
+        $genres = $movie['genres']; // Misalnya, ["Comedy", "Drama", "Fantasy"]
+
+        // Buat bagian filter SPARQL berdasarkan genre
+        $genreFilter = "";
+        if (count($genres) > 1) {
+            // Jika lebih dari 1 genre, cocokkan minimal 2 genre dengan tepat
+            $genreConditions = [];
+            foreach ($genres as $genre) {
+                $genreConditions[] = "?genre = '$genre'";
+            }
+            // Kita akan memeriksa setidaknya 2 genre yang cocok
+            $genreFilter = "FILTER(" . implode(" || ", $genreConditions) . ")";
+        } elseif (count($genres) == 1) {
+            // Jika hanya 1 genre, cocokkan genre tersebut
+            $genreFilter = "FILTER(?genre = '" . $genres[0] . "')";
+        }
+
+        $querySimilarMovies = "
+    PREFIX ns1: <http://example.org/movie#>
+    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+    SELECT ?movie ?name ?image ?rating ?id
+    WHERE {
+        ?movie rdf:type ns1:Movie ;
+               ns1:id ?id ;
+               ns1:genre ?genre ;
+               ns1:name ?name ;
+               ns1:image ?image ;
+               ns1:rating ?rating .
+        FILTER(?id != \"$id\")  # Hindari film yang sedang ditampilkan
+        $genreFilter  # Filter genre sesuai dengan film yang sedang ditampilkan
+    }
+    LIMIT 5
+";
+
+        try {
+            $sparqlSimilarMovies = $sparql->query($querySimilarMovies);
+            // dd($sparqlSimilarMovies);
+            $similarMovies = [];
+            foreach ($sparqlSimilarMovies as $row) {
+                $similarMovies[] = [
+                    'name' => $this->validateString($row->name instanceof \EasyRdf\Literal ? $row->name->getValue() : null, 'Unknown'),
+                    'image' => $this->validateString($row->image instanceof \EasyRdf\Resource ? $row->image->getUri() : null, 'N/A'),
+                    'rating' => $this->validateFloat($row->rating instanceof \EasyRdf\Literal ? $row->rating->getValue() : 0.0, 0.0),
+                    'id' => $row->id instanceof \EasyRdf\Literal ? $row->id->getValue() : null,  // Ambil ID dari Literal
+                ];
+            }
+        } catch (\Exception $e) {
+            $similarMovies = [];
+        }
+
+        // Tambahkan similar movies ke data film
+        $movie['similarMovies'] = $similarMovies;
+
         return view('show', compact('movie'));
     }
 
     private function extractIdFromUri($uri)
-{
-    // Memisahkan URI untuk mengambil ID terakhir
-    $parsedUri = parse_url($uri);
-    $path = $parsedUri['path'] ?? '';
-    return basename($path); // Mengambil bagian terakhir setelah '/'
-}
+    {
+        // Memisahkan URI untuk mengambil ID terakhir
+        $parsedUri = parse_url($uri);
+        $path = $parsedUri['path'] ?? '';
+        return basename($path); // Mengambil bagian terakhir setelah '/'
+    }
 
     public function getPersonDetails($id)
     {
@@ -414,8 +470,6 @@ class MovieController extends Controller
             ]);
         }
     }
-
-
 
     private function validateString($value, $default)
     {

@@ -45,7 +45,8 @@
                                     <div class="stat gap-2">
                                         <div class="stat-title text-white">Year</div>
                                         <div class="stat-value text-xl text-pretty text-[#9E9FA0]">
-                                            {{ $movie['datePublished'] }}</div>
+                                            <a href="{{ route('movies.search', ['keywords' => $movie['datePublished']]) }}" class="text-[#CFF245]">{{ $movie['datePublished'] }}</a>
+                                        </div>
                                         <div class="stat-desc"></div>
                                     </div>
                                     <div class="stat gap-2">
@@ -63,7 +64,10 @@
                                     <div class="stat gap-2">
                                         <div class="stat-title text-white">Genre</div>
                                         <div class="stat-value text-xl text-[#9E9FA0] text-pretty">
-                                            {{ implode(', ', $movie['genres']) }}</div>
+                                        @foreach ($movie['genres'] as $genre)
+                                            <a href="{{ route('movies.search', ['keywords' => $genre]) }}" class="text-[#CFF245]">{{ $genre }}</a>
+                                        @endforeach
+                                        </div>
                                     </div>
                                     <div class="stat gap-2">
                                         <div class="stat-title text-white">Rating</div>
@@ -162,8 +166,6 @@
                         </div>
                     </div>
                 </div>
-                </div>
-                </div>
                 <div class="flex flex-col pt-10 gap-8">
                     <div class="place-self-start flex flex-col gap-2 grow w-full">
                         <div class="text-[#CFF245] text-[28px]">Movies Like This</div>
@@ -172,6 +174,18 @@
                     </div>
                     <div class="carousel carousel-center bg-transparent rounded-box max-w-full space-x-4">
                         <div class="carousel-item flex flex-col gap-2">
+                            @forelse ($movie['similarMovies'] as $similarMovie)
+                                <a href="{{ route('showMovies', ['id' => $similarMovie['id']]) }}"
+                                    class="flex flex-col gap-4 items-center">
+                                    <img src="{{ $similarMovie['image'] }}"
+                                        class="rounded-box" />
+                                    <div
+                                        class="pl-1 text-lg text-white">
+                                        {{ $similarMovie['name'] }}</div>
+                                </a>
+                            @endforeach
+                        </div>
+                        {{-- <div class="carousel-item flex flex-col gap-2">
                             <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
                                 class="rounded-box" />
                             <div class="pl-1 text-lg text-white">Shoes</div>
@@ -215,12 +229,7 @@
                             <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
                                 class="rounded-box" />
                             <div class="pl-1 text-lg text-white">Shoes</div>
-                        </div>
-                        <div class="carousel-item flex flex-col gap-2">
-                            <img src="https://m.media-amazon.com/images/M/MV5BMDAyY2FhYjctNDc5OS00MDNlLThiMGUtY2UxYWVkNGY2ZjljXkEyXkFqcGc@._V1_SX300.jpg"
-                                class="rounded-box" />
-                            <div class="pl-1 text-lg text-white">Shoes</div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </section>
